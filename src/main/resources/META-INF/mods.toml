@@ -2,7 +2,6 @@ modLoader="javafml"
 loaderVersion="[32,)"
 license="MIT License"
 issueTrackerURL="http://www.github.com/MelanX/recipedrawer/issues/"
-license="MIT License"
 
 [[mods]]
 modId="recipedrawer"
