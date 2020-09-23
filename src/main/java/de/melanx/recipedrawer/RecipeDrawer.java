@@ -1,81 +1,38 @@
 package de.melanx.recipedrawer;
 
-import com.mojang.brigadier.CommandDispatcher;
-import de.melanx.recipedrawer.commands.PrintCommand;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import de.melanx.recipedrawer.commands.RecipeDrawerCommands;
+import de.melanx.recipedrawer.commands.RecipeSelectorArgument;
+import de.melanx.recipedrawer.renderers.ShapedRender;
+import de.melanx.recipedrawer.renderers.ShapelessRender;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL12;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod(RecipeDrawer.MODID)
 public class RecipeDrawer {
 
     public static final String MODID = "recipedrawer";
-    public static final List<String> ALL_MODIDS = new ArrayList<>();
-    private static final Logger LOGGER = LogManager.getLogger(MODID);
-    public RecipeDrawer instance;
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public RecipeDrawer() {
-        instance = this;
+        try {
+            Class.forName("net.minecraft.client.main.Main"); // Luckily this class is never renamed.
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            throw new IllegalStateException("RecipeDrawer can only run in singleplayer.", e);
+        }
 
-        MinecraftForge.EVENT_BUS.register(this);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        MinecraftForge.EVENT_BUS.addListener(RecipeDrawerCommands::register);
     }
 
-    @SubscribeEvent
-    public void onRegisterCommands(RegisterCommandsEvent event) {
-        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
-        dispatcher.register(Commands.literal(MODID)
-                .then(PrintCommand.register()));
-    }
+    private void setup(FMLCommonSetupEvent event) {
+        ArgumentTypes.register(MODID + "_recipeselector", RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
 
-    @SubscribeEvent
-    public void onBreakBlock(BlockEvent.BreakEvent event) {
-            if (event.getState().getBlock() == Blocks.GRASS_BLOCK) {
-                try {
-                    Path base = FMLPaths.GAMEDIR.get().resolve(RecipeDrawer.MODID);
-                    IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-                    ResourceLocation location = new ResourceLocation(RecipeDrawer.MODID, "gui/crafting_gui");
-                    IResource resource = resourceManager.getResource(location);
-                    BufferedImage template = ImageIO.read(resource.getInputStream());
-                    BufferedImage bufferedImage = new BufferedImage(62, 124, BufferedImage.TYPE_INT_RGB);
-                    Graphics2D g2d = bufferedImage.createGraphics();
-                    g2d.drawImage(template, 0, 0, null);
-                    g2d.setBackground(Color.BLUE);
-                    g2d.dispose();
-                    File file = new File(base + "\\image.png");
-                    ImageIO.write(bufferedImage, "png", file);
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-    }
-
-    private void onCommonSetup(FMLCommonSetupEvent event) {
-        ModList.get().getModFiles().forEach(file -> file.getMods().forEach(mod -> ALL_MODIDS.add(mod.getModId())));
+        RecipeRenderers.registerRecipeRender(new ShapelessRender());
+        RecipeRenderers.registerRecipeRender(new ShapedRender());
     }
 }
