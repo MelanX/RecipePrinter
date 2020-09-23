@@ -44,7 +44,7 @@ public class ShapedRender implements IRecipeRender<ShapedRecipe> {
         List<Ingredient> ingredients = recipe.getIngredients();
         for (int x = 0; x < recipe.getRecipeWidth(); x++) {
             for (int y = 0; y < recipe.getRecipeHeight(); y++) {
-                int idx = x + (3 * y);
+                int idx = x + (recipe.getRecipeHeight() * y);
                 if (idx < ingredients.size()) {
                     RenderHelper.renderIngredient(matrixStack, buffer, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
                 }
