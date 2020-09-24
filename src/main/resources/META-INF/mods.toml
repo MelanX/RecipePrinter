@@ -6,12 +6,12 @@ issueTrackerURL="http://www.github.com/MelanX/recipedrawer/issues/"
 [[mods]]
 modId="recipedrawer"
 version="${file.jarVersion}"
-displayName="Mod ID"
+displayName="Recipe Drawer"
 updateJSONURL="https://raw.githubusercontent.com/MelanX/mod-updatechecker-files/master/recipedrawer.json"
 displayURL="www.curseforge.com/members/melanx/"
 #logoFile="recipedrawer.png"
 credits=""
-authors="MelanX"
+authors="MelanX, noeppi_noeppi"
 description='''
 
 '''
