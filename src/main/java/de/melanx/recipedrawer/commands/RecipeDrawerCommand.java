@@ -29,7 +29,7 @@ public class RecipeDrawerCommand implements Command<CommandSource> {
         RecipeSelector sel = context.getArgument("recipes", RecipeSelector.class);
         //noinspection ConstantConditions
         RecipeManager rm = Minecraft.getInstance().getIntegratedServer().getRecipeManager();
-        List<ResourceLocation> rls = sel.getRecipes(Minecraft.getInstance().getIntegratedServer().getRecipeManager());
+        List<ResourceLocation> rls = sel.getRecipes(rm);
 
         Set<IRecipeType<?>> typesNotSupported = new HashSet<>();
         AtomicInteger recipesTotal = new AtomicInteger();
@@ -52,6 +52,7 @@ public class RecipeDrawerCommand implements Command<CommandSource> {
                     }
                     //noinspection unchecked
                     ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (matrixStack, buffer) -> ((IRecipeRender<IRecipe<?>> ) render).render(recipe, matrixStack, buffer), path);
+                    ImageHelper.replaceBackground(render, path);
                 }
             });
         }
