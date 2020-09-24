@@ -2,7 +2,6 @@ package de.melanx.recipedrawer.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipedrawer.IRecipeRender;
-import de.melanx.recipedrawer.RecipeDrawer;
 import de.melanx.recipedrawer.util.OverlayIcon;
 import de.melanx.recipedrawer.util.RenderHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
 
-    public static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(RecipeDrawer.MODID, "textures/gui/crafting_gui.png");
+    public static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("minecraft", "textures/gui/container/crafting_table.png");
 
     @Override
     public Class<ShapelessRecipe> getRecipeClass() {
@@ -40,29 +39,8 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
     }
 
     @Override
-    public int getProtectionAreaX() {
-        return 29;
-    }
-
-    @Override
-    public int getProtectionAreaY() {
-        return 16;
-    }
-
-    @Override
-    public int getProtectionAreaX2() {
-        return 145;
-    }
-
-    @Override
-    public int getProtectionAreaY2() {
-        return 70;
-    }
-
-    @Override
     public void render(ShapelessRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderDefaultBackground(matrixStack, buffer, 124, 62);
-        RenderHelper.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 0, 0, 124, 62);
+        RenderHelper.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 25, 12, 124, 62);
         matrixStack.push();
         matrixStack.translate(108, 4, 0);
         matrixStack.scale(1f / 3, 1f / 3, 1);

@@ -2,7 +2,6 @@ package de.melanx.recipedrawer.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.melanx.recipedrawer.IRecipeRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -11,9 +10,6 @@ import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ScreenShotHelper;
 import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
@@ -63,23 +59,5 @@ public class ImageHelper {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void replaceBackground(IRecipeRender<?> render, Path path) {
-        Minecraft.getInstance().queueChunkTracking.add(() -> {
-            try {
-                BufferedImage image = ImageIO.read(path.toFile());
-                for (int x = 0; x < image.getWidth(); x++) {
-                    for (int y = 0; y < image.getHeight(); y++) {
-                        if (!render.isProtected(x, y) && image.getRGB(x, y) == Color.GREEN.getRGB()) {
-                            image.setRGB(x, y, new Color(0, 0, 0, 1).getRGB());
-                        }
-                    }
-                }
-                ImageIO.write(image, "png", path.toFile());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 }

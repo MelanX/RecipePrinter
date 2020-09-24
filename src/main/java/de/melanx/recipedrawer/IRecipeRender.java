@@ -16,16 +16,8 @@ public interface IRecipeRender<T extends IRecipe<?>> {
 
     int getRecipeWidth();
     int getRecipeHeight();
-    int getProtectionAreaX();
-    int getProtectionAreaY();
-    int getProtectionAreaX2();
-    int getProtectionAreaY2();
 
     void render(T recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer);
-
-    default boolean isProtected(int x, int y) {
-        return (x >= this.getProtectionAreaX() && x <= this.getProtectionAreaX2()) || (y >= this.getProtectionAreaY() && y <= this.getProtectionAreaY2());
-    }
 
     default double getScaleFactor() {
         return 5;
