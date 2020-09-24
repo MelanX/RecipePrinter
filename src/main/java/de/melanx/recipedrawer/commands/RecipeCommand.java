@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RecipeDrawerCommand implements Command<CommandSource> {
+public class RecipeCommand implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
@@ -42,7 +42,7 @@ public class RecipeDrawerCommand implements Command<CommandSource> {
                     typesNotSupported.add(recipe.getType());
                 } else {
                     recipesStarted.addAndGet(1);
-                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipeDrawer.MODID).resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', '-') + ".png");
+                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipeDrawer.MODID).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', '-') + ".png");
                     if (!Files.exists(path.getParent())) {
                         try {
                             Files.createDirectories(path.getParent());

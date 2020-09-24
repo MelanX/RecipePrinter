@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
@@ -58,6 +57,7 @@ public class RenderHelper {
         Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
         matrixStack.translate(0, 0, 100);
         Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(Minecraft.getInstance().fontRenderer, stack, x, y, null);
+        resetColor();
         matrixStack.pop();
     }
 

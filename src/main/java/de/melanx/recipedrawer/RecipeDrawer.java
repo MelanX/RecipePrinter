@@ -1,9 +1,9 @@
 package de.melanx.recipedrawer;
 
+import de.melanx.recipedrawer.commands.FilteredResourceLocationArgument;
 import de.melanx.recipedrawer.commands.RecipeDrawerCommands;
 import de.melanx.recipedrawer.commands.RecipeSelectorArgument;
-import de.melanx.recipedrawer.renderers.ShapedRender;
-import de.melanx.recipedrawer.renderers.ShapelessRender;
+import de.melanx.recipedrawer.renderers.*;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -31,8 +31,14 @@ public class RecipeDrawer {
 
     private void setup(FMLCommonSetupEvent event) {
         ArgumentTypes.register(MODID + "_recipeselector", RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
+        ArgumentTypes.register(MODID + "_resourceselector", FilteredResourceLocationArgument.class, new FilteredResourceLocationArgument.Serializer());
 
         RecipeRenderers.registerRecipeRender(new ShapelessRender());
         RecipeRenderers.registerRecipeRender(new ShapedRender());
+        RecipeRenderers.registerRecipeRender(new SmeltingRender());
+        RecipeRenderers.registerRecipeRender(new BlastingRender());
+        RecipeRenderers.registerRecipeRender(new SmokingRender());
+        RecipeRenderers.registerRecipeRender(new CampfireRender());
+        RecipeRenderers.registerRecipeRender(new SmithingRender());
     }
 }

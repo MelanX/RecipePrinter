@@ -7,14 +7,11 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ShapedRender implements IRecipeRender<ShapedRecipe> {
-
-    public static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("minecraft", "textures/gui/container/crafting_table.png");
 
     @Override
     public Class<ShapedRecipe> getRecipeClass() {
@@ -39,7 +36,7 @@ public class ShapedRender implements IRecipeRender<ShapedRecipe> {
 
     @Override
     public void render(ShapedRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 25, 12, 124, 62);
+        RenderHelper.renderBackground(ShapelessRender.BACKGROUND_TEXTURE, matrixStack, buffer, 25, 12, 124, 62);
         RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         for (int x = 0; x < recipe.getRecipeWidth(); x++) {
