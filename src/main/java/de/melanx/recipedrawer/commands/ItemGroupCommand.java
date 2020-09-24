@@ -49,7 +49,7 @@ public class ItemGroupCommand implements Command<CommandSource> {
             }
         }
 
-        ImageHelper.addRenderJob(170, rows * 18 + 8, 5, (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows), path);
+        ImageHelper.addRenderJob(170, rows * 18 + 8, 5, (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows), path, true);
 
         context.getSource().sendFeedback(new StringTextComponent("Started rendering ItemGroup " + group.getPath()), true);
 

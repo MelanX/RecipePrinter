@@ -32,6 +32,10 @@ public class RecipeSelector {
         if (path.equals("*")) {
             path = null;
         }
+        if (selector.trim().equals("*")) {
+            namespace = null;
+            path = null;
+        }
         this.namespace = namespace;
         this.path = path;
     }
