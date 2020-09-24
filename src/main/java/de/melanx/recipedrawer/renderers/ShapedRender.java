@@ -2,6 +2,7 @@ package de.melanx.recipedrawer.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipedrawer.IRecipeRender;
+import de.melanx.recipedrawer.RecipeDrawer;
 import de.melanx.recipedrawer.util.RenderHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -32,6 +33,26 @@ public class ShapedRender implements IRecipeRender<ShapedRecipe> {
     @Override
     public int getRecipeHeight() {
         return 62;
+    }
+
+    @Override
+    public int getProtectionAreaX() {
+        return 29;
+    }
+
+    @Override
+    public int getProtectionAreaY() {
+        return 16;
+    }
+
+    @Override
+    public int getProtectionAreaX2() {
+        return 145;
+    }
+
+    @Override
+    public int getProtectionAreaY2() {
+        return 70;
     }
 
     @Override
