@@ -10,9 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
+import java.awt.*;
+
 public class RenderHelper {
 
     public static final int COLOR_GUI_BACKGROUND = 0xc6c6c6;
+    public static final int TEXT_COLOR = Color.DARK_GRAY.getRGB();
     public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(RecipeDrawer.MODID, "textures/white.png");
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipeDrawer.MODID, "textures/gui/icons.png");
 

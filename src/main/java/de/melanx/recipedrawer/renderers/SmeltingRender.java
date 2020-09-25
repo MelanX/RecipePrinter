@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -59,6 +58,6 @@ public class SmeltingRender implements IRecipeRender<FurnaceRecipe> {
         RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 65, 23);
         RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 5, 5);
         TranslationTextComponent time = new TranslationTextComponent(RecipeDrawer.MODID + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, Color.DARK_GRAY.getRGB());
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, RenderHelper.TEXT_COLOR);
     }
 }
