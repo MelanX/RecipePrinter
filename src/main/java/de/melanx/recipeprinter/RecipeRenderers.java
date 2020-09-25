@@ -1,4 +1,4 @@
-package de.melanx.recipedrawer;
+package de.melanx.recipeprinter;
 
 import net.minecraft.item.crafting.IRecipe;
 

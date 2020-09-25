@@ -1,4 +1,4 @@
-package de.melanx.recipedrawer.util;
+package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;

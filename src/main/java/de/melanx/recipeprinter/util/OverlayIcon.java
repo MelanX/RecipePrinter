@@ -1,4 +1,4 @@
-package de.melanx.recipedrawer.util;
+package de.melanx.recipeprinter.util;
 
 import net.minecraft.util.ResourceLocation;
 

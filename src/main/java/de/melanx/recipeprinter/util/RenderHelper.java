@@ -1,8 +1,8 @@
-package de.melanx.recipedrawer.util;
+package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.melanx.recipedrawer.RecipeDrawer;
+import de.melanx.recipeprinter.RecipePrinter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -16,8 +16,8 @@ public class RenderHelper {
 
     public static final int COLOR_GUI_BACKGROUND = 0xc6c6c6;
     public static final int TEXT_COLOR = Color.DARK_GRAY.getRGB();
-    public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(RecipeDrawer.MODID, "textures/white.png");
-    public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipeDrawer.MODID, "textures/gui/icons.png");
+    public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(RecipePrinter.MODID, "textures/white.png");
+    public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.MODID, "textures/gui/icons.png");
 
     public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
         Minecraft.getInstance().getTextureManager().bindTexture(texture);

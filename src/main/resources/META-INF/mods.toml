@@ -1,13 +1,13 @@
 modLoader="javafml"
 loaderVersion="[32,)"
 license="MIT License"
-issueTrackerURL="http://www.github.com/MelanX/recipedrawer/issues/"
+issueTrackerURL="http://www.github.com/MelanX/recipeprinter/issues/"
 
 [[mods]]
-modId="recipedrawer"
+modId="recipeprinter"
 version="${file.jarVersion}"
-displayName="Recipe Drawer"
-updateJSONURL="https://raw.githubusercontent.com/MelanX/mod-updatechecker-files/master/recipedrawer.json"
+displayName="Recipe Printer"
+updateJSONURL="https://raw.githubusercontent.com/MelanX/mod-updatechecker-files/master/recipeprinter.json"
 displayURL="www.curseforge.com/members/melanx/"
 #logoFile="recipedrawer.png"
 credits=""
@@ -16,14 +16,14 @@ description='''
 
 '''
 
-[[dependencies.recipedrawer]]
+[[dependencies.recipeprinter]]
     modId="forge"
     mandatory=true
     versionRange="[32,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.recipedrawer]]
+[[dependencies.recipeprinter]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.16, 1.17)"

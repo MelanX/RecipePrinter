@@ -1,12 +1,12 @@
-package de.melanx.recipedrawer.commands;
+package de.melanx.recipeprinter.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import de.melanx.recipedrawer.RecipeDrawer;
-import de.melanx.recipedrawer.util.ImageHelper;
-import de.melanx.recipedrawer.util.Util;
+import de.melanx.recipeprinter.RecipePrinter;
+import de.melanx.recipeprinter.util.ImageHelper;
+import de.melanx.recipeprinter.util.Util;
 import net.minecraft.command.CommandSource;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class ItemGroupCommand implements Command<CommandSource> {
             rows += 1;
         int effectiveFinalRows = rows;
 
-        Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipeDrawer.MODID).resolve("item_groups").resolve(group.getPath().replace('/', '-') + ".png");
+        Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.MODID).resolve("item_groups").resolve(group.getPath().replace('/', '-') + ".png");
         if (!Files.exists(path.getParent())) {
             try {
                 Files.createDirectories(path.getParent());

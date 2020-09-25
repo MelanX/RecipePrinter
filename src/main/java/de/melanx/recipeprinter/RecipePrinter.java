@@ -1,9 +1,9 @@
-package de.melanx.recipedrawer;
+package de.melanx.recipeprinter;
 
-import de.melanx.recipedrawer.commands.FilteredResourceLocationArgument;
-import de.melanx.recipedrawer.commands.RecipeDrawerCommands;
-import de.melanx.recipedrawer.commands.RecipeSelectorArgument;
-import de.melanx.recipedrawer.renderers.*;
+import de.melanx.recipeprinter.commands.FilteredResourceLocationArgument;
+import de.melanx.recipeprinter.commands.RecipePrinterCommands;
+import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
+import de.melanx.recipeprinter.renderers.*;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -12,21 +12,21 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(RecipeDrawer.MODID)
-public class RecipeDrawer {
+@Mod(RecipePrinter.MODID)
+public class RecipePrinter {
 
-    public static final String MODID = "recipedrawer";
+    public static final String MODID = "recipeprinter";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-    public RecipeDrawer() {
+    public RecipePrinter() {
         try {
             Class.forName("net.minecraft.client.main.Main"); // Luckily this class is never renamed.
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            throw new IllegalStateException("RecipeDrawer can only run in singleplayer.", e);
+            throw new IllegalStateException("RecipePrinter can only run in singleplayer.", e);
         }
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        MinecraftForge.EVENT_BUS.addListener(RecipeDrawerCommands::register);
+        MinecraftForge.EVENT_BUS.addListener(RecipePrinterCommands::register);
     }
 
     private void setup(FMLCommonSetupEvent event) {

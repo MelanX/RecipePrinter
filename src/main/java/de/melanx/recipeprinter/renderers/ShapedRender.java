@@ -1,8 +1,8 @@
-package de.melanx.recipedrawer.renderers;
+package de.melanx.recipeprinter.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.melanx.recipedrawer.IRecipeRender;
-import de.melanx.recipedrawer.util.RenderHelper;
+import de.melanx.recipeprinter.IRecipeRender;
+import de.melanx.recipeprinter.util.RenderHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;

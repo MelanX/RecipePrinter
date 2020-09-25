@@ -1,4 +1,4 @@
-package de.melanx.recipedrawer.commands;
+package de.melanx.recipeprinter.commands;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;

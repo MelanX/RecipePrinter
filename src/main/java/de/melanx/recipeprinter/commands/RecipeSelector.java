@@ -1,4 +1,4 @@
-package de.melanx.recipedrawer.commands;
+package de.melanx.recipeprinter.commands;
 
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;

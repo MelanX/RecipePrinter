@@ -1,11 +1,11 @@
-package de.melanx.recipedrawer.commands;
+package de.melanx.recipeprinter.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import de.melanx.recipedrawer.IRecipeRender;
-import de.melanx.recipedrawer.RecipeDrawer;
-import de.melanx.recipedrawer.RecipeRenderers;
-import de.melanx.recipedrawer.util.ImageHelper;
+import de.melanx.recipeprinter.IRecipeRender;
+import de.melanx.recipeprinter.RecipePrinter;
+import de.melanx.recipeprinter.RecipeRenderers;
+import de.melanx.recipeprinter.util.ImageHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.item.crafting.IRecipe;
@@ -42,7 +42,7 @@ public class RecipeCommand implements Command<CommandSource> {
                     typesNotSupported.add(recipe.getType());
                 } else {
                     recipesStarted.addAndGet(1);
-                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipeDrawer.MODID).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', '-') + ".png");
+                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.MODID).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', '-') + ".png");
                     if (!Files.exists(path.getParent())) {
                         try {
                             Files.createDirectories(path.getParent());

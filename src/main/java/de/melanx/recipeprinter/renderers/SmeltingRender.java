@@ -1,9 +1,9 @@
-package de.melanx.recipedrawer.renderers;
+package de.melanx.recipeprinter.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.melanx.recipedrawer.IRecipeRender;
-import de.melanx.recipedrawer.RecipeDrawer;
-import de.melanx.recipedrawer.util.RenderHelper;
+import de.melanx.recipeprinter.IRecipeRender;
+import de.melanx.recipeprinter.RecipePrinter;
+import de.melanx.recipeprinter.util.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
@@ -57,7 +57,7 @@ public class SmeltingRender implements IRecipeRender<FurnaceRecipe> {
         matrixStack.pop();
         RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 65, 23);
         RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 5, 5);
-        TranslationTextComponent time = new TranslationTextComponent(RecipeDrawer.MODID + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
+        TranslationTextComponent time = new TranslationTextComponent(RecipePrinter.MODID + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
         Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, RenderHelper.TEXT_COLOR);
     }
 }
