@@ -52,7 +52,10 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
         for (int x = 0; x < max; x++) {
             for (int y = 0; y < max; y++) {
                 int idx = x + (max * y);
-                if (idx < ingredients.size()) {
+                if (ingredients.size() == 1) {
+                    RenderHelper.renderIngredient(matrixStack, buffer, ingredients.get(idx), 23, 23);
+                    return;
+                } else if (idx < ingredients.size()) {
                     RenderHelper.renderIngredient(matrixStack, buffer, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
                 }
             }
