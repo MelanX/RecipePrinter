@@ -42,10 +42,11 @@ public class ImageHelper {
         RenderSystem.ortho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
-        RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
-        net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
 
         MatrixStack matrixStack = new MatrixStack();
+        matrixStack.translate(0, 0, -2000);
+        net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+
         IRenderTypeBuffer buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 
         RenderSystem.defaultAlphaFunc();

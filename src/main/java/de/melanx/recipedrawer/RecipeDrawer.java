@@ -40,5 +40,6 @@ public class RecipeDrawer {
         RecipeRenderers.registerRecipeRender(new SmokingRender());
         RecipeRenderers.registerRecipeRender(new CampfireRender());
         RecipeRenderers.registerRecipeRender(new SmithingRender());
+        RecipeRenderers.registerRecipeRender(new StonecuttingRender());
     }
 }

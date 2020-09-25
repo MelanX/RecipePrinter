@@ -54,9 +54,24 @@ public class RenderHelper {
     public static void renderItem(MatrixStack matrixStack, IRenderTypeBuffer buffer, ItemStack stack, int x, int y) {
         matrixStack.push();
         matrixStack.translate(0, 0, 100);
+
+        // As the item render method does not accept a matrix stack to apply transformations,
+        // we need to do it manually.
+        RenderSystem.pushMatrix();
+        RenderSystem.loadIdentity();
+        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
         Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
+        RenderSystem.popMatrix();
+
         matrixStack.translate(0, 0, 100);
+
+        // Same as above
+        RenderSystem.pushMatrix();
+        RenderSystem.loadIdentity();
+        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
         Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(Minecraft.getInstance().fontRenderer, stack, x, y, null);
+        RenderSystem.popMatrix();
+
         resetColor();
         matrixStack.pop();
     }
