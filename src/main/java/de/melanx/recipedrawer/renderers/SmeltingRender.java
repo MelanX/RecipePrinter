@@ -2,6 +2,7 @@ package de.melanx.recipedrawer.renderers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipedrawer.IRecipeRender;
+import de.melanx.recipedrawer.RecipeDrawer;
 import de.melanx.recipedrawer.util.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -11,8 +12,10 @@ import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -55,7 +58,7 @@ public class SmeltingRender implements IRecipeRender<FurnaceRecipe> {
         matrixStack.pop();
         RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 65, 23);
         RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 5, 5);
-        String timeText = "Time: " + (BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString()) + "s";
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, timeText, 26, 48, 0x000000);
+        TranslationTextComponent time = new TranslationTextComponent(RecipeDrawer.MODID + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, Color.DARK_GRAY.getRGB());
     }
 }
