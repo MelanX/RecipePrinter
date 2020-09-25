@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import de.melanx.recipeprinter.Config;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.ImageHelper;
 import de.melanx.recipeprinter.util.Util;
@@ -49,7 +50,7 @@ public class ItemGroupCommand implements Command<CommandSource> {
             }
         }
 
-        ImageHelper.addRenderJob(170, rows * 18 + 24, 5, (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows, group), path, true);
+        ImageHelper.addRenderJob(170, rows * 18 + 24, Config.scale.get(), (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows, group), path, true);
 
         context.getSource().sendFeedback(new StringTextComponent("Started rendering ItemGroup " + group.getPath()), true);
 

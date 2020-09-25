@@ -20,6 +20,6 @@ public interface IRecipeRender<T extends IRecipe<?>> {
     void render(T recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer);
 
     default double getScaleFactor() {
-        return 5;
+        return Config.scale.get();
     }
 }
