@@ -32,6 +32,6 @@ public class Util {
     }
 
     public static String getGroupName(ItemGroup group) {
-        return new TranslationTextComponent(group.getTranslationKey()).getString();
+        return group.getGroupName().getString();
     }
 }
