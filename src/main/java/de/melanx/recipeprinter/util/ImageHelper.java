@@ -24,6 +24,14 @@ public class ImageHelper {
         int realWidth = (int) Math.round(scale * width);
         int realHeight = (int) Math.round(scale * height);
 
+        boolean tooLarge = false;
+        int maxTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
+        if (realWidth > maxTextureSize || realHeight > maxTextureSize) {
+            tooLarge = true;
+            realWidth = 512;
+            realHeight = 512;
+        }
+
         Framebuffer fb = new Framebuffer(realWidth, realHeight, true, Minecraft.IS_RUNNING_ON_MAC);
 
         RenderSystem.pushMatrix();
@@ -39,7 +47,11 @@ public class ImageHelper {
 
         RenderSystem.matrixMode(GL11.GL_PROJECTION);
         RenderSystem.loadIdentity();
-        RenderSystem.ortho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
+        if (tooLarge) {
+            RenderSystem.ortho(0.0D, 512, 512, 0.0D, 1000.0D, 3000.0D);
+        } else {
+            RenderSystem.ortho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
+        }
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
 
@@ -51,14 +63,36 @@ public class ImageHelper {
 
         RenderSystem.defaultAlphaFunc();
 
-        renderFunc.accept(matrixStack, buffer);
+        if (tooLarge) {
+            String[] msg = new String[]{
+                    "Too large",
+                    "Your OpenGL implementation has a",
+                    "maximum texture size",
+                    "of " + maxTextureSize,
+                    "this image would have had a width",
+                    "of " + (int) Math.round(scale * width),
+                    "and a height",
+                    "of " + (int) Math.round(scale * height),
+                    "which is too large.",
+                    "To fix this lower the scale in",
+                    "the config."
+            };
+            matrixStack.translate(0, 0, 100);
+            matrixStack.scale(2, 2, 2);
+            for (int i = 0;i < msg.length; i++) {
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, msg[i], 5, 5 + (i * (Minecraft.getInstance().fontRenderer.FONT_HEIGHT + 2)), RenderHelper.TEXT_COLOR);
+            }
+            RenderHelper.resetColor();
+        } else {
+            renderFunc.accept(matrixStack, buffer);
+        }
 
         RenderSystem.disableBlend();
         RenderSystem.popMatrix();
 
         NativeImage img = ScreenShotHelper.createScreenshot(realWidth, realHeight, fb);
 
-        if (includeFrame) {
+        if (includeFrame && !tooLarge) {
             applyFrame(img, width, height, scale);
         }
 
