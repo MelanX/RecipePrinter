@@ -3,6 +3,8 @@ package de.melanx.recipeprinter.util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.melanx.recipeprinter.RecipePrinter;
+import net.minecraft.block.Block;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,7 +41,7 @@ public class RenderHelper {
     }
 
     public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y) {
-        render(icon,  matrixStack, buffer, x, y, icon.width, icon.height);
+        render(icon, matrixStack, buffer, x, y, icon.width, icon.height);
     }
 
     public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
@@ -116,6 +118,14 @@ public class RenderHelper {
         repeatBlit(matrixStack, x, y, width, height, sprite);
         resetColor();
         matrixStack.pop();
+    }
+
+    public static void renderFluidOrItem(MatrixStack matrixStack, IRenderTypeBuffer buffer, Block block, int x, int y) {
+        if (block instanceof FlowingFluidBlock) {
+            RenderHelper.renderFluid(matrixStack, buffer, new FluidStack(((FlowingFluidBlock) block).getFluid(), 1000), x, y, 16, 16);
+        } else {
+            RenderHelper.renderItem(matrixStack, buffer, new ItemStack(block), x, y);
+        }
     }
 
     public static void color(int color) {
