@@ -4,6 +4,7 @@ import de.melanx.recipeprinter.commands.FilteredResourceLocationArgument;
 import de.melanx.recipeprinter.commands.RecipePrinterCommands;
 import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
 import de.melanx.recipeprinter.renderers.*;
+import de.melanx.recipeprinter.renderers.botania.ElvenTradeRender;
 import de.melanx.recipeprinter.renderers.botania.PureDaisyRender;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,6 +49,7 @@ public class RecipePrinter {
         RecipeRenderers.registerRecipeRender(new StonecuttingRender());
 
         if (ModList.get().isLoaded("botania")) {
+            RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
             RecipeRenderers.registerRecipeRender(new PureDaisyRender());
         }
     }

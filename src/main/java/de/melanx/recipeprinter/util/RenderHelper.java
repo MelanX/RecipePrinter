@@ -26,10 +26,14 @@ public class RenderHelper {
     public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(RecipePrinter.MODID, "textures/white.png");
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.MODID, "textures/gui/icons.png");
 
-    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
+    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
         Minecraft.getInstance().getTextureManager().bindTexture(texture);
-        AbstractGui.blit(matrixStack, 0, 0, x, y, width, height, 256, 256);
+        AbstractGui.blit(matrixStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
         matrixStack.translate(0, 0, 100);
+    }
+
+    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
+        renderBackground(texture, matrixStack, buffer, x, y, width, height, 256, 256);
     }
 
     public static void renderDefaultBackground(MatrixStack matrixStack, IRenderTypeBuffer buffer, int width, int height) {
