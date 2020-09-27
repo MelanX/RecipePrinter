@@ -3,9 +3,8 @@ package de.melanx.recipeprinter;
 import de.melanx.recipeprinter.commands.FilteredResourceLocationArgument;
 import de.melanx.recipeprinter.commands.RecipePrinterCommands;
 import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
-import de.melanx.recipeprinter.renderers.botania.ElvenTradeRender;
-import de.melanx.recipeprinter.renderers.botania.PetalApothecaryRender;
-import de.melanx.recipeprinter.renderers.botania.PureDaisyRender;
+import de.melanx.recipeprinter.renderers.botania.*;
+import de.melanx.recipeprinter.renderers.vanilla.*;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
@@ -39,14 +38,14 @@ public class RecipePrinter {
         ArgumentTypes.register(MODID + "_recipeselector", RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
         ArgumentTypes.register(MODID + "_resourceselector", FilteredResourceLocationArgument.class, new FilteredResourceLocationArgument.Serializer());
 
-        /*RecipeRenderers.registerRecipeRender(new ShapelessRender());
+        RecipeRenderers.registerRecipeRender(new ShapelessRender());
         RecipeRenderers.registerRecipeRender(new ShapedRender());
         RecipeRenderers.registerRecipeRender(new SmeltingRender());
         RecipeRenderers.registerRecipeRender(new BlastingRender());
         RecipeRenderers.registerRecipeRender(new SmokingRender());
         RecipeRenderers.registerRecipeRender(new CampfireRender());
         RecipeRenderers.registerRecipeRender(new SmithingRender());
-        RecipeRenderers.registerRecipeRender(new StonecuttingRender());*/
+        RecipeRenderers.registerRecipeRender(new StonecuttingRender());
 
         if (ModList.get().isLoaded("botania")) {
             RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
