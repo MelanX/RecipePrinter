@@ -3,7 +3,7 @@ package de.melanx.recipeprinter.renderers.botania;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.RenderHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
@@ -47,9 +47,11 @@ public class PureDaisyRender implements IRecipeRender<IPureDaisyRecipe> {
         RenderHelper.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
         matrixStack.pop();
         RenderHelper.renderItem(matrixStack, buffer, new ItemStack(ModSubtiles.pureDaisy), 44, 18);
-        Block input = recipe.getInput().getDisplayed().get(0).getBlock();
-        RenderHelper.renderFluidOrItem(matrixStack, buffer, input, 14, 18);
-        Block output = recipe.getOutputState().getBlock();
-        RenderHelper.renderFluidOrItem(matrixStack, buffer, output, 73, 18);
+        BlockState input = recipe.getInput().getDisplayed().get(0);
+        RenderHelper.renderSlot(matrixStack, buffer, 14, 18);
+        RenderHelper.renderBlockState(matrixStack, buffer, input, 14, 18);
+        BlockState output = recipe.getOutputState();
+        RenderHelper.renderSlot(matrixStack, buffer, 73, 18);
+        RenderHelper.renderBlockState(matrixStack, buffer, output, 73, 18);
     }
 }

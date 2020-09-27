@@ -50,9 +50,11 @@ public class ElvenTradeRender implements IRecipeRender<IElvenTradeRecipe> {
 
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
             Ingredient ingredient = recipe.getIngredients().get(i);
+            RenderHelper.renderSlot(matrixStack, buffer, 45 + (18 * i), 5);
             RenderHelper.renderIngredient(matrixStack, buffer, ingredient, 43 + (18 * i), 5);
         }
         for (int i = 0; i < recipe.getOutputs().size(); i++) {
+            RenderHelper.renderSlot(matrixStack, buffer, 94 + (18 * i), 46);
             RenderHelper.renderItem(matrixStack, buffer, recipe.getOutputs().get(i), 93 + (18 * i), 46);
         }
     }

@@ -1,4 +1,4 @@
-package de.melanx.recipeprinter.renderers;
+package de.melanx.recipeprinter.renderers.vanilla;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
@@ -6,22 +6,22 @@ import de.melanx.recipeprinter.util.RenderHelper;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.CampfireCookingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.SmokingRecipe;
 
 import javax.annotation.Nullable;
 
-public class SmokingRender implements IRecipeRender<SmokingRecipe> {
+public class CampfireRender implements IRecipeRender<CampfireCookingRecipe> {
 
     @Override
-    public Class<SmokingRecipe> getRecipeClass() {
-        return SmokingRecipe.class;
+    public Class<CampfireCookingRecipe> getRecipeClass() {
+        return CampfireCookingRecipe.class;
     }
 
     @Nullable
     @Override
-    public IRecipeType<? super SmokingRecipe> getRecipeType() {
-        return IRecipeType.SMOKING;
+    public IRecipeType<? super CampfireCookingRecipe> getRecipeType() {
+        return IRecipeType.CAMPFIRE_COOKING;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class SmokingRender implements IRecipeRender<SmokingRecipe> {
     }
 
     @Override
-    public void render(SmokingRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
+    public void render(CampfireCookingRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
         SmeltingRender.render(recipe, matrixStack, buffer);
-        RenderHelper.renderItem(matrixStack, buffer, new ItemStack(Items.SMOKER), 5, 41);
+        RenderHelper.renderItem(matrixStack, buffer, new ItemStack(Items.CAMPFIRE), 5, 41);
     }
 }

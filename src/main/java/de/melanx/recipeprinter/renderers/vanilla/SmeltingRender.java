@@ -1,4 +1,4 @@
-package de.melanx.recipeprinter.renderers;
+package de.melanx.recipeprinter.renderers.vanilla;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;

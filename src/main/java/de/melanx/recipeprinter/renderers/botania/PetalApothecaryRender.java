@@ -10,7 +10,6 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector2f;
 import vazkii.botania.api.recipe.IPetalRecipe;
-import vazkii.botania.client.integration.jei.petalapothecary.PetalApothecaryRecipeCategory;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.crafting.ModRecipeTypes;
 
@@ -52,7 +51,7 @@ public class PetalApothecaryRender implements IRecipeRender<IPetalRecipe> {
         Vector2f center = new Vector2f(47, 53);
 
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
-            RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(i), (int) point.x, (int) point.y);
+            RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(i), Math.round(point.x), Math.round(point.y));
             point = Util.rotatePointAbout(point, center, angleBetweenEach);
         }
         RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 85, 18);

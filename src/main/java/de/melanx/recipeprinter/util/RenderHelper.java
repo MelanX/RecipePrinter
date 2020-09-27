@@ -3,8 +3,7 @@ package de.melanx.recipeprinter.util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.melanx.recipeprinter.RecipePrinter;
-import net.minecraft.block.Block;
-import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -15,6 +14,7 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.awt.*;
@@ -124,11 +124,11 @@ public class RenderHelper {
         matrixStack.pop();
     }
 
-    public static void renderFluidOrItem(MatrixStack matrixStack, IRenderTypeBuffer buffer, Block block, int x, int y) {
-        if (block instanceof FlowingFluidBlock) {
-            RenderHelper.renderFluid(matrixStack, buffer, new FluidStack(((FlowingFluidBlock) block).getFluid(), 1000), x, y, 16, 16);
+    public static void renderBlockState(MatrixStack matrixStack, IRenderTypeBuffer buffer, BlockState state, int x, int y) {
+        if (!state.getFluidState().isEmpty() && state.getMaterial().isLiquid()) {
+            RenderHelper.renderFluid(matrixStack, buffer, new FluidStack(state.getFluidState().getFluid(), 1000), x, y, 16, 16);
         } else {
-            RenderHelper.renderItem(matrixStack, buffer, new ItemStack(block), x, y);
+            RenderHelper.renderItem(matrixStack, buffer, state.getBlock().getItem(Minecraft.getInstance().world, BlockPos.ZERO, state), x, y);
         }
     }
 
