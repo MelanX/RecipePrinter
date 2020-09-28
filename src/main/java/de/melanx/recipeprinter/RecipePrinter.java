@@ -52,6 +52,7 @@ public class RecipePrinter {
             RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
             RecipeRenderers.registerRecipeRender(new PetalApothecaryRender());
             RecipeRenderers.registerRecipeRender(new PureDaisyRender());
+            RecipeRenderers.registerRecipeRender(new RunicAltarRender());
         }
     }
 }
