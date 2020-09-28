@@ -47,9 +47,11 @@ public class PureDaisyRender implements IRecipeRender<IPureDaisyRecipe> {
         RenderHelper.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
         matrixStack.pop();
         RenderHelper.renderItem(matrixStack, buffer, new ItemStack(ModSubtiles.pureDaisy), 44, 18);
+
         BlockState input = recipe.getInput().getDisplayed().get(0);
         RenderHelper.renderSlot(matrixStack, buffer, 14, 18);
         RenderHelper.renderBlockState(matrixStack, buffer, input, 14, 18);
+
         BlockState output = recipe.getOutputState();
         RenderHelper.renderSlot(matrixStack, buffer, 73, 18);
         RenderHelper.renderBlockState(matrixStack, buffer, output, 73, 18);
