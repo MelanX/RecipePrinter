@@ -48,6 +48,7 @@ public class RecipePrinter {
         RecipeRenderers.registerRecipeRender(new StonecuttingRender());
 
         if (ModList.get().isLoaded("botania")) {
+            RecipeRenderers.registerRecipeRender(new BrewRender());
             RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
             RecipeRenderers.registerRecipeRender(new PetalApothecaryRender());
             RecipeRenderers.registerRecipeRender(new PureDaisyRender());
