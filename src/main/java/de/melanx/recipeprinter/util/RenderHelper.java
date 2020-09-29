@@ -3,12 +3,19 @@ package de.melanx.recipeprinter.util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.melanx.recipeprinter.RecipePrinter;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.awt.*;
 
@@ -19,10 +26,14 @@ public class RenderHelper {
     public static final ResourceLocation TEXTURE_WHITE = new ResourceLocation(RecipePrinter.MODID, "textures/white.png");
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.MODID, "textures/gui/icons.png");
 
-    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
+    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
         Minecraft.getInstance().getTextureManager().bindTexture(texture);
-        AbstractGui.blit(matrixStack, 0, 0, x, y, width, height, 256, 256);
+        AbstractGui.blit(matrixStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
         matrixStack.translate(0, 0, 100);
+    }
+
+    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
+        renderBackground(texture, matrixStack, buffer, x, y, width, height, 256, 256);
     }
 
     public static void renderDefaultBackground(MatrixStack matrixStack, IRenderTypeBuffer buffer, int width, int height) {
@@ -34,7 +45,7 @@ public class RenderHelper {
     }
 
     public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y) {
-        render(icon,  matrixStack, buffer, x, y, icon.width, icon.height);
+        render(icon, matrixStack, buffer, x, y, icon.width, icon.height);
     }
 
     public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
@@ -88,11 +99,75 @@ public class RenderHelper {
         }
     }
 
+    public static void renderFluid(MatrixStack matrixStack, IRenderTypeBuffer buffer, FluidStack stack, int x, int y, int width, int height) {
+        if (!stack.isEmpty()) {
+            Fluid fluid = stack.getFluid();
+            int color = fluid.getAttributes().getColor(stack);
+            TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluid.getAttributes().getStillTexture(stack));
+            renderFluid(matrixStack, buffer, sprite, color, x, y, width, height);
+        }
+    }
+
+    public static void renderFluid(MatrixStack matrixStack, IRenderTypeBuffer buffer, int color, int x, int y, int width, int height) {
+        Fluid fluid = Fluids.WATER;
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluid.getAttributes().getStillTexture());
+        renderFluid(matrixStack, buffer, sprite, color, x, y, width, height);
+    }
+
+    private static void renderFluid(MatrixStack matrixStack, IRenderTypeBuffer buffer, TextureAtlasSprite sprite, int color, int x, int y, int width, int height) {
+        matrixStack.push();
+        matrixStack.translate(0, 0, 100);
+        Minecraft.getInstance().getTextureManager().bindTexture(sprite.getAtlasTexture().getTextureLocation());
+        color(color);
+        repeatBlit(matrixStack, x, y, width, height, sprite);
+        resetColor();
+        matrixStack.pop();
+    }
+
+    public static void renderBlockState(MatrixStack matrixStack, IRenderTypeBuffer buffer, BlockState state, int x, int y) {
+        if (!state.getFluidState().isEmpty() && state.getMaterial().isLiquid()) {
+            RenderHelper.renderFluid(matrixStack, buffer, new FluidStack(state.getFluidState().getFluid(), 1000), x, y, 16, 16);
+        } else {
+            RenderHelper.renderItem(matrixStack, buffer, state.getBlock().getItem(Minecraft.getInstance().world, BlockPos.ZERO, state), x, y);
+        }
+    }
+
     public static void color(int color) {
         RenderSystem.color3f(((color >>> 16) & 0xFF) / 255f, ((color >>> 8) & 0xFF) / 255f, (color & 0xFF) / 255f);
     }
 
     public static void resetColor() {
         RenderSystem.color3f(1, 1, 1);
+    }
+
+    public static void repeatBlit(MatrixStack matrixStack, int x, int y, int displayWidth, int displayHeight, TextureAtlasSprite sprite) {
+        repeatBlit(matrixStack, x, y, sprite.getWidth(), sprite.getHeight(), displayWidth, displayHeight, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+    }
+
+    public static void repeatBlit(MatrixStack matrixStack, int x, int y, int texWidth, int texHeight, int displayWidth, int displayHeight, float minU, float maxU, float minV, float maxV) {
+        int pixelsRenderedX = 0;
+        while (pixelsRenderedX < displayWidth) {
+            int pixelsNowX = Math.min(texWidth, displayWidth - pixelsRenderedX);
+            float maxUnow = maxU;
+            if (pixelsNowX < texWidth) {
+                maxUnow = minU + ((maxU - minU) * (pixelsNowX / (float) texWidth));
+            }
+
+            int pixelsRenderedY = 0;
+            while (pixelsRenderedY < displayHeight) {
+                int pixelsNowY = Math.min(texHeight, displayHeight - pixelsRenderedY);
+                float maxVnow = maxV;
+                if (pixelsNowY < texHeight) {
+                    maxVnow = minV + ((maxV - minV) * (pixelsNowY / (float) texHeight));
+                }
+
+                AbstractGui.innerBlit(matrixStack.getLast().getMatrix(), x + pixelsRenderedX, x + pixelsRenderedX + pixelsNowX,
+                        y + pixelsRenderedY, y + pixelsRenderedY + pixelsNowY,
+                        0, minU, maxUnow, minV, maxVnow);
+
+                pixelsRenderedY += pixelsNowY;
+            }
+            pixelsRenderedX += pixelsNowX;
+        }
     }
 }

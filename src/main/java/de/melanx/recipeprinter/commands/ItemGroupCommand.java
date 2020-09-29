@@ -36,8 +36,9 @@ public class ItemGroupCommand implements Command<CommandSource> {
             throw new SimpleCommandExceptionType(new StringTextComponent("This ItemGroup is empty")).create();
         }
 
-        int rows = stacks.size() / 9;
-        if (rows * 9 < stacks.size())
+        int itemsPerRow = Config.itemsPerRow.get();
+        int rows = stacks.size() / itemsPerRow;
+        if (rows * itemsPerRow < stacks.size())
             rows += 1;
         int effectiveFinalRows = rows;
 
@@ -50,7 +51,7 @@ public class ItemGroupCommand implements Command<CommandSource> {
             }
         }
 
-        ImageHelper.addRenderJob(170, rows * 18 + 24, Config.scale.get(), (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows, group), path, true);
+        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, Config.scale.get(), (matrixStack, buffer) -> Util.renderItemGroup(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path, true);
 
         context.getSource().sendFeedback(new StringTextComponent("Started rendering ItemGroup " + group.getPath()), true);
 

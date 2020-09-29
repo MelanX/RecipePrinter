@@ -12,9 +12,12 @@ public class Config {
     }
 
     public static ForgeConfigSpec.IntValue scale;
+    public static ForgeConfigSpec.IntValue itemsPerRow;
 
     public static void init(ForgeConfigSpec.Builder builder) {
-        scale = builder.comment("Scale for the image.")
+        scale = builder.comment("Scale for the images.")
                 .defineInRange("scale", 5, 1, Integer.MAX_VALUE);
+        itemsPerRow = builder.comment("The amount of items per row when rendering creative tabs")
+                .defineInRange("items_per_row", 9, 1, Integer.MAX_VALUE);
     }
 }

@@ -3,9 +3,11 @@ package de.melanx.recipeprinter;
 import de.melanx.recipeprinter.commands.FilteredResourceLocationArgument;
 import de.melanx.recipeprinter.commands.RecipePrinterCommands;
 import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
-import de.melanx.recipeprinter.renderers.*;
+import de.melanx.recipeprinter.renderers.botania.*;
+import de.melanx.recipeprinter.renderers.vanilla.*;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -44,5 +46,14 @@ public class RecipePrinter {
         RecipeRenderers.registerRecipeRender(new CampfireRender());
         RecipeRenderers.registerRecipeRender(new SmithingRender());
         RecipeRenderers.registerRecipeRender(new StonecuttingRender());
+
+        if (ModList.get().isLoaded("botania")) {
+            RecipeRenderers.registerRecipeRender(new BrewRender());
+            RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
+            RecipeRenderers.registerRecipeRender(new InfusionRender());
+            RecipeRenderers.registerRecipeRender(new PetalApothecaryRender());
+            RecipeRenderers.registerRecipeRender(new PureDaisyRender());
+            RecipeRenderers.registerRecipeRender(new RunicAltarRender());
+        }
     }
 }
