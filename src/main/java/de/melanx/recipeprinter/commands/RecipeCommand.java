@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,7 +43,7 @@ public class RecipeCommand implements Command<CommandSource> {
                     typesNotSupported.add(recipe.getType());
                 } else {
                     recipesStarted.addAndGet(1);
-                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.MODID).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', '-') + ".png");
+                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.MODID).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', File.separatorChar) + ".png");
                     if (!Files.exists(path.getParent())) {
                         try {
                             Files.createDirectories(path.getParent());
