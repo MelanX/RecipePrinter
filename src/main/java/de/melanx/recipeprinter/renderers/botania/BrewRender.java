@@ -3,7 +3,7 @@ package de.melanx.recipeprinter.renderers.botania;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.OverlayIcon;
-import de.melanx.recipeprinter.util.RenderHelper;
+import de.melanx.recipeprinter.util.RenderHelperMod;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
@@ -40,21 +40,21 @@ public class BrewRender implements IRecipeRender<IBrewRecipe> {
 
     @Override
     public void render(IBrewRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
-        RenderHelper.renderSlot(matrixStack, buffer, 15, 40);
-        RenderHelper.renderItem(matrixStack, buffer, VIAL, 15, 40);
+        RenderHelperMod.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
+        RenderHelperMod.renderSlot(matrixStack, buffer, 15, 40);
+        RenderHelperMod.renderItem(matrixStack, buffer, VIAL, 15, 40);
 
-        RenderHelper.renderSlot(matrixStack, buffer, 63, 40);
-        RenderHelper.renderItem(matrixStack, buffer, recipe.getOutput(VIAL), 63, 40);
+        RenderHelperMod.renderSlot(matrixStack, buffer, 63, 40);
+        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getOutput(VIAL), 63, 40);
 
         int posX = 72 - (recipe.getIngredients().size() * 9);
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
-            RenderHelper.renderSlot(matrixStack, buffer, posX, 5);
-            RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(i), posX, 5);
+            RenderHelperMod.renderSlot(matrixStack, buffer, posX, 5);
+            RenderHelperMod.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(i), posX, 5);
             posX += 18;
         }
 
-        RenderHelper.render(OverlayIcon.ARROW, matrixStack, buffer, 36, 40);
-        RenderHelper.render(OverlayIcon.ARROW_DOWN, matrixStack, buffer, 63, 23);
+        RenderHelperMod.render(OverlayIcon.ARROW, matrixStack, buffer, 36, 40);
+        RenderHelperMod.render(OverlayIcon.ARROW_DOWN, matrixStack, buffer, 63, 23);
     }
 }

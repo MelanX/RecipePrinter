@@ -3,7 +3,8 @@ package de.melanx.recipeprinter.renderers.vanilla;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.RecipePrinter;
-import de.melanx.recipeprinter.util.RenderHelper;
+import de.melanx.recipeprinter.util.RenderHelperMod;
+import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
@@ -46,19 +47,19 @@ public class SmeltingRender implements IRecipeRender<FurnaceRecipe> {
     @Override
     public void render(FurnaceRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
         SmeltingRender.render((AbstractCookingRecipe) recipe, matrixStack, buffer);
-        RenderHelper.renderItem(matrixStack, buffer, new ItemStack(Items.FURNACE), 5, 41);
+        RenderHelperMod.renderItem(matrixStack, buffer, new ItemStack(Items.FURNACE), 5, 41);
     }
 
     public static void render(AbstractCookingRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 51, 12, 90, 62);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 51, 12, 90, 62);
         matrixStack.push();
         matrixStack.translate(6, 25, 10);
-        RenderHelper.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 176, 0, 14, 14);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 176, 0, 14, 14);
         matrixStack.pop();
-        RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 65, 23);
-        RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 5, 5);
-        TranslationTextComponent time = new TranslationTextComponent(RecipePrinter.MODID + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
-        Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, RenderHelper.TEXT_COLOR);
+        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 65, 23);
+        RenderHelperMod.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 5, 5);
+        TranslationTextComponent time = new TranslationTextComponent(RecipePrinter.getInstance().modid + ".time", BigDecimal.valueOf(recipe.getCookTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, time.getString(), 26, 48, RenderHelperMod.TEXT_COLOR);
         RenderHelper.resetColor();
     }
 }

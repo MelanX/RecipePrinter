@@ -42,7 +42,7 @@ public class ItemGroupCommand implements Command<CommandSource> {
             rows += 1;
         int effectiveFinalRows = rows;
 
-        Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.MODID).resolve("item_groups").resolve(group.getPath().replace('/', '-') + ".png");
+        Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("item_groups").resolve(group.getPath().replace('/', '-') + ".png");
         if (!Files.exists(path.getParent())) {
             try {
                 Files.createDirectories(path.getParent());

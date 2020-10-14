@@ -5,24 +5,28 @@ import de.melanx.recipeprinter.commands.RecipePrinterCommands;
 import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
 import de.melanx.recipeprinter.renderers.botania.*;
 import de.melanx.recipeprinter.renderers.vanilla.*;
+import io.github.noeppi_noeppi.libx.mod.ModX;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-@Mod(RecipePrinter.MODID)
-public class RecipePrinter {
+import javax.annotation.Nonnull;
 
-    public static final String MODID = "recipeprinter";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+@Mod("recipeprinter")
+public class RecipePrinter extends ModX {
+
+    private static RecipePrinter instance;
 
     public RecipePrinter() {
+        super("recipeprinter", null);
+
+        instance = this;
+
         try {
             Class.forName("net.minecraft.client.main.Main"); // Luckily this class is never renamed.
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
@@ -30,13 +34,18 @@ public class RecipePrinter {
         }
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CONFIG);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         MinecraftForge.EVENT_BUS.addListener(RecipePrinterCommands::register);
     }
 
-    private void setup(FMLCommonSetupEvent event) {
-        ArgumentTypes.register(MODID + "_recipeselector", RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
-        ArgumentTypes.register(MODID + "_resourceselector", FilteredResourceLocationArgument.class, new FilteredResourceLocationArgument.Serializer());
+    @Nonnull
+    public static RecipePrinter getInstance() {
+        return instance;
+    }
+
+    @Override
+    protected void setup(FMLCommonSetupEvent event) {
+        ArgumentTypes.register(this.modid + "_recipeselector", RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
+        ArgumentTypes.register(this.modid + "_resourceselector", FilteredResourceLocationArgument.class, new FilteredResourceLocationArgument.Serializer());
 
         RecipeRenderers.registerRecipeRender(new ShapelessRender());
         RecipeRenderers.registerRecipeRender(new ShapedRender());
@@ -55,5 +64,10 @@ public class RecipePrinter {
             RecipeRenderers.registerRecipeRender(new PureDaisyRender());
             RecipeRenderers.registerRecipeRender(new RunicAltarRender());
         }
+    }
+
+    @Override
+    protected void clientSetup(FMLClientSetupEvent fmlClientSetupEvent) {
+
     }
 }
