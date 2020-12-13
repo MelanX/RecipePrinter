@@ -2,7 +2,7 @@ package de.melanx.recipeprinter.renderers.botania;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
-import de.melanx.recipeprinter.util.RenderHelper;
+import de.melanx.recipeprinter.util.RenderHelperMod;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
@@ -41,19 +41,19 @@ public class PureDaisyRender implements IRecipeRender<IPureDaisyRecipe> {
 
     @Override
     public void render(IPureDaisyRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
+        RenderHelperMod.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
         matrixStack.push();
         matrixStack.translate(21, 5, 0);
-        RenderHelper.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
+        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
         matrixStack.pop();
-        RenderHelper.renderItem(matrixStack, buffer, new ItemStack(ModSubtiles.pureDaisy), 44, 18);
+        RenderHelperMod.renderItem(matrixStack, buffer, new ItemStack(ModSubtiles.pureDaisy), 44, 18);
 
         BlockState input = recipe.getInput().getDisplayed().get(0);
-        RenderHelper.renderSlot(matrixStack, buffer, 14, 18);
-        RenderHelper.renderBlockState(matrixStack, buffer, input, 14, 18);
+        RenderHelperMod.renderSlot(matrixStack, buffer, 14, 18);
+        RenderHelperMod.renderBlockState(matrixStack, buffer, input, 14, 18);
 
         BlockState output = recipe.getOutputState();
-        RenderHelper.renderSlot(matrixStack, buffer, 73, 18);
-        RenderHelper.renderBlockState(matrixStack, buffer, output, 73, 18);
+        RenderHelperMod.renderSlot(matrixStack, buffer, 73, 18);
+        RenderHelperMod.renderBlockState(matrixStack, buffer, output, 73, 18);
     }
 }

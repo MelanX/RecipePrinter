@@ -2,7 +2,7 @@ package de.melanx.recipeprinter.renderers.botania;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
-import de.melanx.recipeprinter.util.RenderHelper;
+import de.melanx.recipeprinter.util.RenderHelperMod;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
@@ -22,7 +22,7 @@ public class InfusionRender implements IRecipeRender<IManaInfusionRecipe> {
     private final ItemStack pool = new ItemStack(ModBlocks.manaPool);
 
     public InfusionRender() {
-        ItemNBTHelper.setBoolean(pool, "RenderFull", true);
+        ItemNBTHelper.setBoolean(this.pool, "RenderFull", true);
     }
 
     @Override
@@ -48,18 +48,18 @@ public class InfusionRender implements IRecipeRender<IManaInfusionRecipe> {
 
     @Override
     public void render(IManaInfusionRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelper.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
+        RenderHelperMod.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
         matrixStack.push();
         matrixStack.translate(44, 4, 0);
-        RenderHelper.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
+        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
         matrixStack.pop();
         HUDHandler.renderManaBar(matrixStack, 24, 54, 0x0000FF, 0.75F, recipe.getManaToConsume(), TilePool.MAX_MANA / 10);
-        RenderHelper.renderItem(matrixStack, buffer, pool, 67, 17);
+        RenderHelperMod.renderItem(matrixStack, buffer, this.pool, 67, 17);
 
-        RenderHelper.renderSlot(matrixStack, buffer, 37, 17);
-        RenderHelper.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 37, 17);
+        RenderHelperMod.renderSlot(matrixStack, buffer, 37, 17);
+        RenderHelperMod.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 37, 17);
 
-        RenderHelper.renderSlot(matrixStack, buffer, 96, 17);
-        RenderHelper.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 96, 17);
+        RenderHelperMod.renderSlot(matrixStack, buffer, 96, 17);
+        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 96, 17);
     }
 }

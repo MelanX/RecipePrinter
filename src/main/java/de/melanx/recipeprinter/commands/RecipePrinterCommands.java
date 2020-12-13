@@ -17,7 +17,7 @@ import static net.minecraft.command.Commands.literal;
 public class RecipePrinterCommands {
 
     public static void register(RegisterCommandsEvent event) {
-        event.getDispatcher().register(literal(RecipePrinter.MODID).then(
+        event.getDispatcher().register(literal(RecipePrinter.getInstance().modid).then(
                 literal("recipe").then(argument("recipes", recipeSelector()).executes(new RecipeCommand()))
         ).then(
                 literal("itemgroup").then(argument("group",

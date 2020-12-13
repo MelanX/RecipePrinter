@@ -3,11 +3,11 @@ package de.melanx.recipeprinter.util;
 import net.minecraft.util.ResourceLocation;
 
 public enum OverlayIcon {
-    SLOT(RenderHelper.TEXTURE_ICONS, 0, 0, 18, 18),
-    BIG_SLOT(RenderHelper.TEXTURE_ICONS, 0, 18, 26, 26),
-    SHAPELESS(RenderHelper.TEXTURE_ICONS, 26, 0, 36, 36),
-    ARROW(RenderHelper.TEXTURE_ICONS, 0, 44, 22, 16),
-    ARROW_DOWN(RenderHelper.TEXTURE_ICONS, 26, 36, 15, 14);
+    SLOT(RenderHelperMod.TEXTURE_ICONS, 0, 0, 18, 18),
+    BIG_SLOT(RenderHelperMod.TEXTURE_ICONS, 0, 18, 26, 26),
+    SHAPELESS(RenderHelperMod.TEXTURE_ICONS, 26, 0, 36, 36),
+    ARROW(RenderHelperMod.TEXTURE_ICONS, 0, 44, 22, 16),
+    ARROW_DOWN(RenderHelperMod.TEXTURE_ICONS, 26, 36, 15, 14);
 
     public final ResourceLocation texture;
     public final int u;

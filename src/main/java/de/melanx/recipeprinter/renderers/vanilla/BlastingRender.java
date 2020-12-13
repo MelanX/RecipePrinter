@@ -2,7 +2,7 @@ package de.melanx.recipeprinter.renderers.vanilla;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.melanx.recipeprinter.IRecipeRender;
-import de.melanx.recipeprinter.util.RenderHelper;
+import de.melanx.recipeprinter.util.RenderHelperMod;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -37,6 +37,6 @@ public class BlastingRender implements IRecipeRender<BlastingRecipe> {
     @Override
     public void render(BlastingRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
         SmeltingRender.render(recipe, matrixStack, buffer);
-        RenderHelper.renderItem(matrixStack, buffer, new ItemStack(Items.BLAST_FURNACE), 5, 41);
+        RenderHelperMod.renderItem(matrixStack, buffer, new ItemStack(Items.BLAST_FURNACE), 5, 41);
     }
 }

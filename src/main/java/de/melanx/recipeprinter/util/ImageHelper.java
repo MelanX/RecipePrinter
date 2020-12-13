@@ -2,6 +2,7 @@ package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -80,7 +81,7 @@ public class ImageHelper {
             matrixStack.translate(0, 0, 100);
             matrixStack.scale(2, 2, 2);
             for (int i = 0;i < msg.length; i++) {
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, msg[i], 5, 5 + (i * (Minecraft.getInstance().fontRenderer.FONT_HEIGHT + 2)), RenderHelper.TEXT_COLOR);
+                Minecraft.getInstance().fontRenderer.drawString(matrixStack, msg[i], 5, 5 + (i * (Minecraft.getInstance().fontRenderer.FONT_HEIGHT + 2)), RenderHelperMod.TEXT_COLOR);
             }
             RenderHelper.resetColor();
         } else {

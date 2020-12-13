@@ -117,6 +117,10 @@ repositories {
         name = "curios"
         url = "https://maven.theillusivec4.top/"
     }
+    maven {
+        name = "MelanX Maven"
+        url = "https://maven.melanx.de/"
+    }
 }
 
 dependencies {
@@ -124,6 +128,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
 
     compile fg.deobf("vazkii.botania:Botania:${botania_version}")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
+    runtime fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
     compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compile fg.deobf("io.github.noeppi_noeppi.mods:LibX:${mc_version}-${libx_version}")
 }
