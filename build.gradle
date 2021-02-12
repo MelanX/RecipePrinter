@@ -100,7 +100,7 @@ publishing {
                     node.appendNode('groupId', 'io.github.noeppi_noeppi.mods')
                     node.appendNode('artifactId', 'LibX')
                     node.appendNode('version', "${mc_version}-${libx_version}")
-                    node.appendNode('scope', 'runtime')
+                    node.appendNode('scope', 'compile')
                 }
             }
         }
