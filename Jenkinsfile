@@ -24,13 +24,13 @@ pipeline {
                 archiveArtifacts 'build/libs*/*jar'
             }
         }
-
-        stage('Upload artifacts to CurseForge') {
-            steps {
-                echo 'Uploading to CurseForge'
-                sh './gradlew curseforge'
-            }
-        }
+//        Remove for testing
+//        stage('Upload artifacts to CurseForge') {
+//            steps {
+//                echo 'Uploading to CurseForge'
+//                sh './gradlew curseforge'
+//            }
+//        }
 
         stage('Publish artifacts') {
             steps {
