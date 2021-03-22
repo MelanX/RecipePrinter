@@ -130,9 +130,6 @@ repositories {
         name = "MelanX Maven"
         url = "https://maven.melanx.de/"
     }
-    maven {
-        url = "https://www.cursemaven.com"
-    }
 }
 
 dependencies {
@@ -143,7 +140,6 @@ dependencies {
     runtime fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
     compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compile fg.deobf("io.github.noeppi_noeppi.mods:LibX:${mc_version}-${libx_version}")
-    runtime fg.deobf("curse.maven:create-328085:3167531")
 }
 
 private static String getVersion(String group, String artifact, String baseVersion) {
