@@ -9,16 +9,18 @@ import de.melanx.recipeprinter.jei.PrinterJEI;
 import de.melanx.recipeprinter.util.ImageHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.gui.recipes.RecipeLayout;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.melanx.recipeprinter.jei.PrinterJEI.REG;
 
@@ -28,14 +30,22 @@ public class JeiCommand implements Command<CommandSource> {
 		if (PrinterJEI.REG == null)
 			return 0;
 		RecipeSelector sel = context.getArgument("recipes", RecipeSelector.class);
-		RecipeManager rm = context.getSource().getServer().getRecipeManager();
+		RecipeManager rm = Minecraft.getInstance().getIntegratedServer().getRecipeManager();
 		List<ResourceLocation> recipes = sel.getRecipes(rm);
 		ImmutableList<IRecipeCategory<?>> categories = REG.getRecipeCategories();
 
+		AtomicInteger i = new AtomicInteger();
+		AtomicInteger matches = new AtomicInteger();
 		for (ResourceLocation rl : recipes) {
 			rm.getRecipe(rl).ifPresent(iRecipe -> categories.stream().filter(iRecipeCategory -> iRecipeCategory.getRecipeClass().isAssignableFrom(iRecipe.getClass())).forEach(iRecipeCategory -> {
-				RecipePrinter.getInstance().logger.debug("Printing " + iRecipeCategory + " " + iRecipe);
-				Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', File.separatorChar) + ".png");
+				matches.getAndIncrement();
+				Path path = context.getSource().getServer().getDataDirectory().toPath()
+					.resolve(RecipePrinter.getInstance().modid)
+					.resolve("jei")
+					.resolve(rl.getNamespace())
+					.resolve(iRecipeCategory.getClass().getSimpleName())
+					// .resolve(rl.toString().replaceAll("/|:", Matcher.quoteReplacement(String.valueOf(File.separatorChar))))
+					.resolve(rl.getPath().replaceAll("([^/]*/)*", "") + ".png");
 				if (!Files.exists(path.getParent())) {
 					try {
 						Files.createDirectories(path.getParent());
@@ -44,10 +54,18 @@ public class JeiCommand implements Command<CommandSource> {
 					}
 				}
 
-				IRecipeCategory<IRecipe<?>> category = (IRecipeCategory<IRecipe<?>>) iRecipeCategory;
-				RecipeLayout<?> layout = RecipeLayout.create(-1, category, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
-				if (layout != null)
-					ImageHelper.addRenderJob(category.getBackground().getWidth(), category.getBackground().getHeight(), Config.scale.get() * 2., (matrixStack, buffer) -> layout.drawRecipe(matrixStack, 0, 0), path, true);
+				RecipeLayout<?> layout;
+				try {
+					layout = RecipeLayout.create(-1, (IRecipeCategory<IRecipe<?>>) iRecipeCategory, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
+					if (layout != null) {
+						ImageHelper.addRenderJob(iRecipeCategory.getBackground().getWidth(), iRecipeCategory.getBackground().getHeight(), Config.scale.get() * 2., (matrixStack, buffer) -> {
+							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", iRecipeCategory.getUid(), iRecipe.getId(), MathHelper.floor(100. * i.getAndIncrement() / matches.get()));
+							layout.drawRecipe(matrixStack, -10, -10);
+						}, path, true);
+					}
+				} catch (RuntimeException e) {
+					RecipePrinter.getInstance().logger.error("Could not print recipe {}: {}", iRecipe.getId(), e.getMessage());
+				}
 			}));
 		}
 
