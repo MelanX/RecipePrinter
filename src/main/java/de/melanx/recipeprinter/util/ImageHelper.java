@@ -2,6 +2,7 @@ package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.melanx.recipeprinter.RecipePrinter;
 import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
@@ -100,7 +101,7 @@ public class ImageHelper {
         try {
             img.write(imagePath);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            RecipePrinter.getInstance().logger.error("Could not print recipe: {}", e.getMessage());
         }
     }
 

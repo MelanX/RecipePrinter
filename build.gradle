@@ -133,7 +133,7 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
+    compile fg.deobf("mezz.jei:jei-1.16.2:${jei_version}")
 
     compile fg.deobf("vazkii.botania:Botania:${botania_version}")
     runtime fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
