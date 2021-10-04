@@ -1,14 +1,14 @@
 package de.melanx.recipeprinter.renderers.vanilla;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.OverlayIcon;
 import de.melanx.recipeprinter.util.RenderHelperMod;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,8 +24,8 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
 
     @Nullable
     @Override
-    public IRecipeType<? super ShapelessRecipe> getRecipeType() {
-        return IRecipeType.CRAFTING;
+    public RecipeType<? super ShapelessRecipe> getRecipeType() {
+        return RecipeType.CRAFTING;
     }
 
     @Override
@@ -39,24 +39,24 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
     }
 
     @Override
-    public void render(ShapelessRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, matrixStack, buffer, 25, 12, 124, 62);
-        matrixStack.push();
-        matrixStack.translate(108, 4, 0);
-        matrixStack.scale(1f / 3, 1f / 3, 1);
-        RenderHelperMod.render(OverlayIcon.SHAPELESS, matrixStack, buffer, 0, 0);
-        matrixStack.pop();
-        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 99, 23);
+    public void render(ShapelessRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62);
+        poseStack.pushPose();
+        poseStack.translate(108, 4, 0);
+        poseStack.scale(1f / 3, 1f / 3, 1);
+        RenderHelperMod.render(OverlayIcon.SHAPELESS, poseStack, buffer, 0, 0);
+        poseStack.popPose();
+        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         int max = ingredients.size() > 4 ? 3 : 2;
         for (int x = 0; x < max; x++) {
             for (int y = 0; y < max; y++) {
                 int idx = x + (max * y);
                 if (ingredients.size() == 1) {
-                    RenderHelperMod.renderIngredient(matrixStack, buffer, ingredients.get(idx), 23, 23);
+                    RenderHelperMod.renderIngredient(poseStack, buffer, ingredients.get(idx), 23, 23);
                     return;
                 } else if (idx < ingredients.size()) {
-                    RenderHelperMod.renderIngredient(matrixStack, buffer, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
+                    RenderHelperMod.renderIngredient(poseStack, buffer, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
                 }
             }
         }

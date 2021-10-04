@@ -1,6 +1,6 @@
 package de.melanx.recipeprinter;
 
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class RecipeRenderers {
         renders.put(render.getRecipeClass(), render);
     }
 
-    public static <T extends IRecipe<?>> IRecipeRender<T> getRecipeRender(T recipe) {
+    public static <T extends Recipe<?>> IRecipeRender<T> getRecipeRender(T recipe) {
         Class<?> clazz = recipe.getClass();
         IRecipeRender<?> render = null;
         for (Class<?> recipeClass : renders.keySet()) {

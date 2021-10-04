@@ -1,21 +1,21 @@
 package de.melanx.recipeprinter.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.RecipePrinter;
 import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import io.github.noeppi_noeppi.libx.render.RenderHelperFluid;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class RenderHelperMod {
 
@@ -23,84 +23,84 @@ public class RenderHelperMod {
     public static final int TEXT_COLOR = Color.DARK_GRAY.getRGB();
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.getInstance().modid, "textures/gui/icons.png");
 
-    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
-        Minecraft.getInstance().getTextureManager().bindTexture(texture);
-        AbstractGui.blit(matrixStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
-        matrixStack.translate(0, 0, 100);
+    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
+        Minecraft.getInstance().getTextureManager().bind(texture);
+        GuiComponent.blit(poseStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
+        poseStack.translate(0, 0, 100);
     }
 
-    public static void renderBackground(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
-        renderBackground(texture, matrixStack, buffer, x, y, width, height, 256, 256);
+    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
+        renderBackground(texture, poseStack, buffer, x, y, width, height, 256, 256);
     }
 
-    public static void renderDefaultBackground(MatrixStack matrixStack, IRenderTypeBuffer buffer, int width, int height) {
-        Minecraft.getInstance().getTextureManager().bindTexture(RenderHelper.TEXTURE_WHITE);
-        RenderHelper.color(COLOR_GUI_BACKGROUND);
-        AbstractGui.blit(matrixStack, 0, 0, 0, 0, width, height, 256, 256);
+    public static void renderDefaultBackground(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
+        Minecraft.getInstance().getTextureManager().bind(RenderHelper.TEXTURE_WHITE);
+        RenderHelper.rgb(COLOR_GUI_BACKGROUND);
+        GuiComponent.blit(poseStack, 0, 0, 0, 0, width, height, 256, 256);
         RenderHelper.resetColor();
-        matrixStack.translate(0, 0, 100);
+        poseStack.translate(0, 0, 100);
     }
 
-    public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y) {
-        render(icon, matrixStack, buffer, x, y, icon.width, icon.height);
+    public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y) {
+        render(icon, poseStack, buffer, x, y, icon.width, icon.height);
     }
 
-    public static void render(OverlayIcon icon, MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y, int width, int height) {
-        Minecraft.getInstance().getTextureManager().bindTexture(icon.texture);
-        matrixStack.push();
-        matrixStack.translate(x, y, 10);
-        matrixStack.scale((float) width / icon.width, (float) height / icon.height, 1);
-        AbstractGui.blit(matrixStack, 0, 0, icon.u, icon.v, icon.width, icon.height, 256, 256);
-        matrixStack.pop();
+    public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
+        Minecraft.getInstance().getTextureManager().bind(icon.texture);
+        poseStack.pushPose();
+        poseStack.translate(x, y, 10);
+        poseStack.scale((float) width / icon.width, (float) height / icon.height, 1);
+        GuiComponent.blit(poseStack, 0, 0, icon.u, icon.v, icon.width, icon.height, 256, 256);
+        poseStack.popPose();
     }
 
-    public static void renderSlot(MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y) {
-        render(OverlayIcon.SLOT, matrixStack, buffer, x - 1, y - 1);
+    public static void renderSlot(PoseStack poseStack, MultiBufferSource buffer, int x, int y) {
+        render(OverlayIcon.SLOT, poseStack, buffer, x - 1, y - 1);
     }
 
-    public static void renderBigSlot(MatrixStack matrixStack, IRenderTypeBuffer buffer, int x, int y) {
-        render(OverlayIcon.BIG_SLOT, matrixStack, buffer, x - 5, y - 5);
+    public static void renderBigSlot(PoseStack poseStack, MultiBufferSource buffer, int x, int y) {
+        render(OverlayIcon.BIG_SLOT, poseStack, buffer, x - 5, y - 5);
     }
 
-    public static void renderItem(MatrixStack matrixStack, IRenderTypeBuffer buffer, ItemStack stack, int x, int y) {
-        matrixStack.push();
-        matrixStack.translate(0, 0, 100);
+    public static void renderItem(PoseStack poseStack, MultiBufferSource buffer, ItemStack stack, int x, int y) {
+        poseStack.pushPose();
+        poseStack.translate(0, 0, 100);
 
         // As the item render method does not accept a matrix stack to apply transformations,
         // we need to do it manually.
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
-        Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
+        RenderSystem.multMatrix(poseStack.last().pose());
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
         RenderSystem.popMatrix();
 
-        matrixStack.translate(0, 0, 100);
+        poseStack.translate(0, 0, 100);
 
         // Same as above
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
-        Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(Minecraft.getInstance().fontRenderer, stack, x, y, null);
+        RenderSystem.multMatrix(poseStack.last().pose());
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, null);
         RenderSystem.popMatrix();
 
         RenderHelper.resetColor();
-        matrixStack.pop();
+        poseStack.popPose();
     }
 
-    public static void renderIngredient(MatrixStack matrixStack, IRenderTypeBuffer buffer, Ingredient ingredient, int x, int y) {
-        if (!ingredient.hasNoMatchingItems()) {
-            ItemStack[] stacks = ingredient.getMatchingStacks();
+    public static void renderIngredient(PoseStack poseStack, MultiBufferSource buffer, Ingredient ingredient, int x, int y) {
+        if (!ingredient.isEmpty()) {
+            ItemStack[] stacks = ingredient.getItems();
             if (stacks.length != 0) {
-                renderItem(matrixStack, buffer, stacks[0], x, y);
+                renderItem(poseStack, buffer, stacks[0], x, y);
             }
         }
     }
 
-    public static void renderBlockState(MatrixStack matrixStack, IRenderTypeBuffer buffer, BlockState state, int x, int y) {
+    public static void renderBlockState(PoseStack poseStack, MultiBufferSource buffer, BlockState state, int x, int y) {
         if (!state.getFluidState().isEmpty() && state.getMaterial().isLiquid()) {
-            RenderHelperFluid.renderFluid(matrixStack, buffer, new FluidStack(state.getFluidState().getFluid(), 1000), x, y, 16, 16);
+            RenderHelperFluid.renderFluid(poseStack, buffer, new FluidStack(state.getFluidState().getType(), 1000), x, y, 16, 16);
         } else {
-            RenderHelperMod.renderItem(matrixStack, buffer, state.getBlock().getItem(Minecraft.getInstance().world, BlockPos.ZERO, state), x, y);
+            RenderHelperMod.renderItem(poseStack, buffer, state.getBlock().getCloneItemStack(Minecraft.getInstance().level, BlockPos.ZERO, state), x, y);
         }
     }
 }

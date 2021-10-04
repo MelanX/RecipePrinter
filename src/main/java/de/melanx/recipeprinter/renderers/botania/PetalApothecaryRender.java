@@ -1,14 +1,14 @@
 package de.melanx.recipeprinter.renderers.botania;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.RenderHelperMod;
 import de.melanx.recipeprinter.util.Util;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.phys.Vec2;
 import vazkii.botania.api.recipe.IPetalRecipe;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.crafting.ModRecipeTypes;
@@ -26,7 +26,7 @@ public class PetalApothecaryRender implements IRecipeRender<IPetalRecipe> {
 
     @Nullable
     @Override
-    public IRecipeType<? super IPetalRecipe> getRecipeType() {
+    public RecipeType<? super IPetalRecipe> getRecipeType() {
         return ModRecipeTypes.PETAL_TYPE;
     }
 
@@ -41,19 +41,19 @@ public class PetalApothecaryRender implements IRecipeRender<IPetalRecipe> {
     }
 
     @Override
-    public void render(IPetalRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelperMod.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
-        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 19, 0, 108, 93);
-        RenderHelperMod.renderItem(matrixStack, buffer, new ItemStack(ModBlocks.defaultAltar), 47, 53);
+    public void render(IPetalRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
+        RenderHelperMod.renderDefaultBackground(poseStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
+        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, poseStack, buffer, 19, 0, 108, 93);
+        RenderHelperMod.renderItem(poseStack, buffer, new ItemStack(ModBlocks.defaultAltar), 47, 53);
 
         double angleBetweenEach = 360.0 / recipe.getIngredients().size();
-        Vector2f point = new Vector2f(47, 21);
-        Vector2f center = new Vector2f(47, 53);
+        Vec2 point = new Vec2(47, 21);
+        Vec2 center = new Vec2(47, 53);
 
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
-            RenderHelperMod.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(i), Math.round(point.x), Math.round(point.y));
+            RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(i), Math.round(point.x), Math.round(point.y));
             point = Util.rotatePointAbout(point, center, angleBetweenEach);
         }
-        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 85, 18);
+        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 85, 18);
     }
 }

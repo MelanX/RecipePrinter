@@ -1,15 +1,15 @@
 package de.melanx.recipeprinter.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.RecipePrinter;
 import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Screenshot;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.util.ScreenShotHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -18,11 +18,11 @@ import java.util.function.BiConsumer;
 
 public class ImageHelper {
 
-    public static void addRenderJob(int width, int height, double scale, BiConsumer<MatrixStack, IRenderTypeBuffer> renderFunc, Path imagePath, boolean includeFrame) {
-        Minecraft.getInstance().queueChunkTracking.add(() -> render(width, height, scale, renderFunc, imagePath, includeFrame));
+    public static void addRenderJob(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath, boolean includeFrame) {
+        Minecraft.getInstance().progressTasks.add(() -> render(width, height, scale, renderFunc, imagePath, includeFrame));
     }
 
-    public static void render(int width, int height, double scale, BiConsumer<MatrixStack, IRenderTypeBuffer> renderFunc, Path imagePath, boolean includeFrame) {
+    public static void render(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath, boolean includeFrame) {
         int realWidth = (int) Math.round(scale * width);
         int realHeight = (int) Math.round(scale * height);
 
@@ -34,13 +34,13 @@ public class ImageHelper {
             realHeight = 512;
         }
 
-        Framebuffer fb = new Framebuffer(realWidth, realHeight, true, Minecraft.IS_RUNNING_ON_MAC);
+        RenderTarget fb = new RenderTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
 
         RenderSystem.pushMatrix();
         RenderSystem.enableBlend();
-        RenderSystem.clear(16640, Minecraft.IS_RUNNING_ON_MAC);
-        fb.bindFramebuffer(true);
-        FogRenderer.resetFog();
+        RenderSystem.clear(16640, Minecraft.ON_OSX);
+        fb.bindWrite(true);
+        FogRenderer.setupNoFog();
 
         RenderSystem.enableTexture();
         RenderSystem.enableCull();
@@ -57,11 +57,11 @@ public class ImageHelper {
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
 
-        MatrixStack matrixStack = new MatrixStack();
-        matrixStack.translate(0, 0, -2000);
-        net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate(0, 0, -2000);
+        com.mojang.blaze3d.platform.Lighting.setupFor3DItems();
 
-        IRenderTypeBuffer buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
         RenderSystem.defaultAlphaFunc();
 
@@ -79,56 +79,56 @@ public class ImageHelper {
                     "To fix this lower the scale in",
                     "the config."
             };
-            matrixStack.translate(0, 0, 100);
-            matrixStack.scale(2, 2, 2);
-            for (int i = 0;i < msg.length; i++) {
-                Minecraft.getInstance().fontRenderer.drawString(matrixStack, msg[i], 5, 5 + (i * (Minecraft.getInstance().fontRenderer.FONT_HEIGHT + 2)), RenderHelperMod.TEXT_COLOR);
+            poseStack.translate(0, 0, 100);
+            poseStack.scale(2, 2, 2);
+            for (int i = 0; i < msg.length; i++) {
+                Minecraft.getInstance().font.draw(poseStack, msg[i], 5, 5 + (i * (Minecraft.getInstance().font.lineHeight + 2)), RenderHelperMod.TEXT_COLOR);
             }
             RenderHelper.resetColor();
         } else {
-            renderFunc.accept(matrixStack, buffer);
+            renderFunc.accept(poseStack, buffer);
         }
 
         RenderSystem.disableBlend();
         RenderSystem.popMatrix();
 
-        NativeImage img = ScreenShotHelper.createScreenshot(realWidth, realHeight, fb);
+        NativeImage img = Screenshot.takeScreenshot(realWidth, realHeight, fb);
 
         if (includeFrame && !tooLarge) {
             applyFrame(img, width, height, scale);
         }
 
         try {
-            img.write(imagePath);
+            img.writeToFile(imagePath);
         } catch (IOException e) {
             RecipePrinter.getInstance().logger.error("Could not print recipe: {}", e.getMessage());
         }
     }
 
     private static void applyFrame(NativeImage img, int width, int height, double scale) {
-        img.fillAreaRGBA(scale(0, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(0, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(width - 2, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(width - 1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(0, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(0, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(width - 2, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillAreaRGBA(scale(width - 1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(0, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(0, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(width - 2, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(width - 1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(0, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(0, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(width - 2, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
+        img.fillRect(scale(width - 1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
 
-        img.fillAreaRGBA(scale(1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(width - 2, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(width - 2, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(width - 2, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(width - 2, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
 
-        img.fillAreaRGBA(scale(2, scale), scale(0, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(2, scale), scale(height - 1, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(0, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
-        img.fillAreaRGBA(scale(width - 1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
+        img.fillRect(scale(2, scale), scale(0, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(2, scale), scale(height - 1, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
+        img.fillRect(scale(0, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
+        img.fillRect(scale(width - 1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
 
-        img.fillAreaRGBA(scale(2, scale), scale(1, scale), scale(width - 4, scale), scale(1, scale), 0xFFD8D8D8);
-        img.fillAreaRGBA(scale(2, scale), scale(height - 2, scale), scale(width - 4, scale), scale(1, scale), 0xFFB3B3B3);
-        img.fillAreaRGBA(scale(1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFD8D8D8);
-        img.fillAreaRGBA(scale(width - 2, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFB3B3B3);
+        img.fillRect(scale(2, scale), scale(1, scale), scale(width - 4, scale), scale(1, scale), 0xFFD8D8D8);
+        img.fillRect(scale(2, scale), scale(height - 2, scale), scale(width - 4, scale), scale(1, scale), 0xFFB3B3B3);
+        img.fillRect(scale(1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFD8D8D8);
+        img.fillRect(scale(width - 2, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFB3B3B3);
     }
 
     private static int scale(int value, double scale) {

@@ -7,12 +7,12 @@ import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.RecipeRenderers;
 import de.melanx.recipeprinter.util.ImageHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.CommandSource;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,27 +23,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RecipeCommand implements Command<CommandSource> {
+public class RecipeCommand implements Command<CommandSourceStack> {
 
     @Override
-    public int run(CommandContext<CommandSource> context) {
+    public int run(CommandContext<CommandSourceStack> context) {
         RecipeSelector sel = context.getArgument("recipes", RecipeSelector.class);
         //noinspection ConstantConditions
-        RecipeManager rm = Minecraft.getInstance().getIntegratedServer().getRecipeManager();
+        RecipeManager rm = Minecraft.getInstance().getSingleplayerServer().getRecipeManager();
         List<ResourceLocation> rls = sel.getRecipes(rm);
 
-        Set<IRecipeType<?>> typesNotSupported = new HashSet<>();
+        Set<RecipeType<?>> typesNotSupported = new HashSet<>();
         AtomicInteger recipesTotal = new AtomicInteger();
         AtomicInteger recipesStarted = new AtomicInteger();
         for (ResourceLocation rl : rls) {
-            rm.getRecipe(rl).ifPresent(recipe -> {
+            rm.byKey(rl).ifPresent(recipe -> {
                 recipesTotal.addAndGet(1);
                 IRecipeRender<?> render = RecipeRenderers.getRecipeRender(recipe);
                 if (render == null) {
                     typesNotSupported.add(recipe.getType());
                 } else {
                     recipesStarted.addAndGet(1);
-                    Path path = context.getSource().getServer().getDataDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', File.separatorChar) + ".png");
+                    Path path = context.getSource().getServer().getServerDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("recipes").resolve(rl.getNamespace()).resolve(rl.getPath().replace('/', File.separatorChar) + ".png");
                     if (!Files.exists(path.getParent())) {
                         try {
                             Files.createDirectories(path.getParent());
@@ -52,17 +52,17 @@ public class RecipeCommand implements Command<CommandSource> {
                         }
                     }
                     //noinspection unchecked
-                    ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (matrixStack, buffer) -> ((IRecipeRender<IRecipe<?>> ) render).render(recipe, matrixStack, buffer), path, true);
+                    ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (matrixStack, buffer) -> ((IRecipeRender<Recipe<?>>) render).render(recipe, matrixStack, buffer), path, true);
                 }
             });
         }
 
         if (typesNotSupported.isEmpty()) {
-            context.getSource().sendFeedback(new StringTextComponent("Started rendering " + recipesTotal.get() + " recipes."), true);
+            context.getSource().sendSuccess(new TextComponent("Started rendering " + recipesTotal.get() + " recipes."), true);
         } else {
-            context.getSource().sendFeedback(new StringTextComponent("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
-            for (IRecipeType<?> rt : typesNotSupported) {
-                context.getSource().sendFeedback(new StringTextComponent("Could not render recipes: " + rt.toString()), true);
+            context.getSource().sendSuccess(new TextComponent("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
+            for (RecipeType<?> rt : typesNotSupported) {
+                context.getSource().sendSuccess(new TextComponent("Could not render recipes: " + rt.toString()), true);
             }
         }
 

@@ -1,6 +1,6 @@
 package de.melanx.recipeprinter.util;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public enum OverlayIcon {
     SLOT(RenderHelperMod.TEXTURE_ICONS, 0, 0, 18, 18),

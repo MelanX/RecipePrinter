@@ -1,7 +1,7 @@
 package de.melanx.recipeprinter.commands;
 
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class RecipeSelector {
     }
 
     public List<ResourceLocation> getRecipes(RecipeManager mgr) {
-        return mgr.getKeys().filter(rl -> (this.namespace == null || rl.getNamespace().equalsIgnoreCase(this.namespace))
+        return mgr.getRecipeIds().filter(rl -> (this.namespace == null || rl.getNamespace().equalsIgnoreCase(this.namespace))
                 && (this.path == null || rl.getPath().equalsIgnoreCase(this.path))).collect(Collectors.toList());
     }
 }

@@ -1,12 +1,12 @@
 package de.melanx.recipeprinter.renderers.botania;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.RenderHelperMod;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import vazkii.botania.api.recipe.IManaInfusionRecipe;
 import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.common.block.ModBlocks;
@@ -32,7 +32,7 @@ public class InfusionRender implements IRecipeRender<IManaInfusionRecipe> {
 
     @Nullable
     @Override
-    public IRecipeType<? super IManaInfusionRecipe> getRecipeType() {
+    public RecipeType<? super IManaInfusionRecipe> getRecipeType() {
         return ModRecipeTypes.MANA_INFUSION_TYPE;
     }
 
@@ -47,19 +47,19 @@ public class InfusionRender implements IRecipeRender<IManaInfusionRecipe> {
     }
 
     @Override
-    public void render(IManaInfusionRecipe recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
-        RenderHelperMod.renderDefaultBackground(matrixStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
-        matrixStack.push();
-        matrixStack.translate(44, 4, 0);
-        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, matrixStack, buffer, 0, 0, 65, 44);
-        matrixStack.pop();
-        HUDHandler.renderManaBar(matrixStack, 24, 54, 0x0000FF, 0.75F, recipe.getManaToConsume(), TilePool.MAX_MANA / 10);
-        RenderHelperMod.renderItem(matrixStack, buffer, this.pool, 67, 17);
+    public void render(IManaInfusionRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
+        RenderHelperMod.renderDefaultBackground(poseStack, buffer, this.getRecipeWidth(), this.getRecipeHeight());
+        poseStack.pushPose();
+        poseStack.translate(44, 4, 0);
+        RenderHelperMod.renderBackground(OVERLAY_TEXTURE, poseStack, buffer, 0, 0, 65, 44);
+        poseStack.popPose();
+        HUDHandler.renderManaBar(poseStack, 24, 54, 0x0000FF, 0.75F, recipe.getManaToConsume(), TilePool.MAX_MANA / 10);
+        RenderHelperMod.renderItem(poseStack, buffer, this.pool, 67, 17);
 
-        RenderHelperMod.renderSlot(matrixStack, buffer, 37, 17);
-        RenderHelperMod.renderIngredient(matrixStack, buffer, recipe.getIngredients().get(0), 37, 17);
+        RenderHelperMod.renderSlot(poseStack, buffer, 37, 17);
+        RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 37, 17);
 
-        RenderHelperMod.renderSlot(matrixStack, buffer, 96, 17);
-        RenderHelperMod.renderItem(matrixStack, buffer, recipe.getRecipeOutput(), 96, 17);
+        RenderHelperMod.renderSlot(poseStack, buffer, 96, 17);
+        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 96, 17);
     }
 }

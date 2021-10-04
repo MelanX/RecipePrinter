@@ -6,7 +6,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.MethodsReturnNonnullByDefault;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.load.registration.RecipeCategoryRegistration;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 

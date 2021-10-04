@@ -6,7 +6,7 @@ import de.melanx.recipeprinter.commands.RecipeSelectorArgument;
 import de.melanx.recipeprinter.renderers.botania.*;
 import de.melanx.recipeprinter.renderers.vanilla.*;
 import io.github.noeppi_noeppi.libx.mod.ModX;
-import net.minecraft.command.arguments.ArgumentTypes;
+import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;

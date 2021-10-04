@@ -8,9 +8,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.arguments.IArgumentSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.commands.synchronization.ArgumentSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
 
     public RecipeSelector parse(StringReader reader) {
         int start = reader.getCursor();
-        while(reader.canRead() && (ResourceLocation.isValidPathCharacter(reader.peek()) || reader.peek() == '*')) {
+        while (reader.canRead() && (ResourceLocation.isAllowedInResourceLocation(reader.peek()) || reader.peek() == '*')) {
             reader.skip();
         }
         String str = reader.getString().substring(start, reader.getCursor());
@@ -44,7 +44,7 @@ public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
             builder.suggest(theString + "*");
         }
         //noinspection ConstantConditions
-        for (ResourceLocation rl : Minecraft.getInstance().getIntegratedServer().getRecipeManager().getKeys().collect(Collectors.toList())) {
+        for (ResourceLocation rl : Minecraft.getInstance().getSingleplayerServer().getRecipeManager().getRecipeIds().collect(Collectors.toList())) {
             if (rl.toString().toLowerCase().startsWith(theString))
                 builder.suggest(rl.toString());
         }
@@ -58,21 +58,21 @@ public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
         );
     }
 
-    public static class Serializer implements IArgumentSerializer<RecipeSelectorArgument> {
+    public static class Serializer implements ArgumentSerializer<RecipeSelectorArgument> {
 
         @Override
-        public void write(@Nonnull RecipeSelectorArgument argument, @Nonnull PacketBuffer buffer) {
+        public void serializeToNetwork(@Nonnull RecipeSelectorArgument argument, @Nonnull FriendlyByteBuf buffer) {
 
         }
 
         @Nonnull
         @Override
-        public RecipeSelectorArgument read(@Nonnull PacketBuffer buffer) {
+        public RecipeSelectorArgument deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
             return new RecipeSelectorArgument();
         }
 
         @Override
-        public void write(@Nonnull RecipeSelectorArgument argument, @Nonnull JsonObject json) {
+        public void serializeToJson(@Nonnull RecipeSelectorArgument argument, @Nonnull JsonObject json) {
 
         }
     }

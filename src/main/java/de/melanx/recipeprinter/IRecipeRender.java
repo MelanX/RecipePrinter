@@ -1,23 +1,24 @@
 package de.melanx.recipeprinter;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import javax.annotation.Nullable;
 
-public interface IRecipeRender<T extends IRecipe<?>> {
+public interface IRecipeRender<T extends Recipe<?>> {
 
     Class<T> getRecipeClass();
 
     @Nullable
-    IRecipeType<? super T> getRecipeType();
+    RecipeType<? super T> getRecipeType();
 
     int getRecipeWidth();
+
     int getRecipeHeight();
 
-    void render(T recipe, MatrixStack matrixStack, IRenderTypeBuffer buffer);
+    void render(T recipe, PoseStack matrixStack, MultiBufferSource buffer);
 
     default double getScaleFactor() {
         return Config.scale.get();

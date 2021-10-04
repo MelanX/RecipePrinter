@@ -9,11 +9,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.command.arguments.IArgumentSerializer;
-import net.minecraft.command.arguments.ResourceLocationArgument;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.synchronization.ArgumentSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
     public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation rl = this.rla.parse(reader);
         if (!this.args.get().contains(rl)) {
-            throw new SimpleCommandExceptionType(new StringTextComponent("This resource can not be found.")).create();
+            throw new SimpleCommandExceptionType(new TextComponent("This resource can not be found.")).create();
         }
         return rl;
     }
@@ -62,10 +62,10 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
         return examples;
     }
 
-    public static class Serializer implements IArgumentSerializer<FilteredResourceLocationArgument> {
+    public static class Serializer implements ArgumentSerializer<FilteredResourceLocationArgument> {
 
         @Override
-        public void write(FilteredResourceLocationArgument argument, PacketBuffer buffer) {
+        public void serializeToNetwork(FilteredResourceLocationArgument argument, FriendlyByteBuf buffer) {
             List<ResourceLocation> rls = argument.args.get();
             buffer.writeInt(rls.size());
             for (ResourceLocation rl : rls) {
@@ -75,17 +75,17 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
 
         @Nonnull
         @Override
-        public FilteredResourceLocationArgument read(@Nonnull PacketBuffer buffer) {
+        public FilteredResourceLocationArgument deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
             int amount = buffer.readInt();
             List<ResourceLocation> rls = new ArrayList<>();
-            for (int i = 0;i < amount; i++) {
+            for (int i = 0; i < amount; i++) {
                 rls.add(buffer.readResourceLocation());
             }
             return new FilteredResourceLocationArgument(() -> rls);
         }
 
         @Override
-        public void write(FilteredResourceLocationArgument argument, @Nonnull JsonObject json) {
+        public void serializeToJson(FilteredResourceLocationArgument argument, @Nonnull JsonObject json) {
             JsonArray list = new JsonArray();
             for (ResourceLocation rl : argument.args.get())
                 list.add(rl.toString());
