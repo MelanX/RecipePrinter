@@ -7,16 +7,14 @@ import de.melanx.recipeprinter.renderers.vanilla.*;
 import io.github.noeppi_noeppi.libx.mod.ModX;
 import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import javax.annotation.Nonnull;
 
 @Mod("recipeprinter")
-public class RecipePrinter extends ModX {
+public final class RecipePrinter extends ModX {
 
     private static RecipePrinter instance;
 
@@ -31,7 +29,6 @@ public class RecipePrinter extends ModX {
             throw new IllegalStateException("RecipePrinter can only run in singleplayer.", e);
         }
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CONFIG);
         MinecraftForge.EVENT_BUS.addListener(RecipePrinterCommands::register);
     }
 

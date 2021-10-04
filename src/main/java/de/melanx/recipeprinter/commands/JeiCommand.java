@@ -3,7 +3,7 @@ package de.melanx.recipeprinter.commands;
 import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import de.melanx.recipeprinter.Config;
+import de.melanx.recipeprinter.ModConfig;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.jei.PrinterJEI;
 import de.melanx.recipeprinter.util.ImageHelper;
@@ -60,7 +60,7 @@ public class JeiCommand implements Command<CommandSourceStack> {
 					//noinspection unchecked
 					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
 					if (layout != null) {
-						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth(), recipeCategory.getBackground().getHeight(), Config.scale.get() * 2., (matrixStack, buffer) -> {
+						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth(), recipeCategory.getBackground().getHeight(), ModConfig.scale * 2., (matrixStack, buffer) -> {
 							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", recipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
 							layout.drawRecipe(matrixStack, -10, -10);
 						}, path, true);

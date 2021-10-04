@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import de.melanx.recipeprinter.Config;
+import de.melanx.recipeprinter.ModConfig;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.ImageHelper;
 import de.melanx.recipeprinter.util.Util;
@@ -36,7 +36,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             throw new SimpleCommandExceptionType(new TextComponent("This ItemGroup is empty")).create();
         }
 
-        int itemsPerRow = Config.itemsPerRow.get();
+        int itemsPerRow = ModConfig.itemsPerRow;
         int rows = stacks.size() / itemsPerRow;
         if (rows * itemsPerRow < stacks.size())
             rows += 1;
@@ -51,7 +51,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             }
         }
 
-        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, Config.scale.get(), (matrixStack, buffer) -> Util.renderItemCategory(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path, true);
+        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (matrixStack, buffer) -> Util.renderItemCategory(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path, true);
 
         context.getSource().sendSuccess(new TextComponent("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
 
