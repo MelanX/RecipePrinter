@@ -100,6 +100,7 @@ public class RenderHelperMod {
         if (!state.getFluidState().isEmpty() && state.getMaterial().isLiquid()) {
             RenderHelperFluid.renderFluid(poseStack, buffer, new FluidStack(state.getFluidState().getType(), 1000), x, y, 16, 16);
         } else {
+            // noinspection ConstantConditions,deprecation
             RenderHelperMod.renderItem(poseStack, buffer, state.getBlock().getCloneItemStack(Minecraft.getInstance().level, BlockPos.ZERO, state), x, y);
         }
     }

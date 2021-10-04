@@ -30,6 +30,7 @@ public class JeiCommand implements Command<CommandSourceStack> {
 		if (PrinterJEI.REG == null)
 			return 0;
 		RecipeSelector sel = context.getArgument("recipes", RecipeSelector.class);
+		//noinspection ConstantConditions
 		RecipeManager rm = Minecraft.getInstance().getSingleplayerServer().getRecipeManager();
 		List<ResourceLocation> recipes = sel.getRecipes(rm);
 		ImmutableList<IRecipeCategory<?>> categories = REG.getRecipeCategories();
@@ -37,13 +38,13 @@ public class JeiCommand implements Command<CommandSourceStack> {
 		AtomicInteger i = new AtomicInteger();
 		AtomicInteger matches = new AtomicInteger();
 		for (ResourceLocation rl : recipes) {
-			rm.byKey(rl).ifPresent(iRecipe -> categories.stream().filter(iRecipeCategory -> iRecipeCategory.getRecipeClass().isAssignableFrom(iRecipe.getClass())).forEach(iRecipeCategory -> {
+			rm.byKey(rl).ifPresent(iRecipe -> categories.stream().filter(iRecipeCategory -> iRecipeCategory.getRecipeClass().isAssignableFrom(iRecipe.getClass())).forEach(recipeCategory -> {
 				matches.getAndIncrement();
 				Path path = context.getSource().getServer().getServerDirectory().toPath()
 						.resolve(RecipePrinter.getInstance().modid)
 						.resolve("jei")
 						.resolve(rl.getNamespace())
-						.resolve(iRecipeCategory.getClass().getSimpleName())
+						.resolve(recipeCategory.getClass().getSimpleName())
 						// .resolve(rl.toString().replaceAll("/|:", Matcher.quoteReplacement(String.valueOf(File.separatorChar))))
 						.resolve(rl.getPath().replaceAll("([^/]*/)*", "") + ".png");
 				if (!Files.exists(path.getParent())) {
@@ -56,10 +57,11 @@ public class JeiCommand implements Command<CommandSourceStack> {
 
 				RecipeLayout<?> layout;
 				try {
-					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) iRecipeCategory, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
+					//noinspection unchecked
+					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
 					if (layout != null) {
-						ImageHelper.addRenderJob(iRecipeCategory.getBackground().getWidth(), iRecipeCategory.getBackground().getHeight(), Config.scale.get() * 2., (matrixStack, buffer) -> {
-							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", iRecipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
+						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth(), recipeCategory.getBackground().getHeight(), Config.scale.get() * 2., (matrixStack, buffer) -> {
+							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", recipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
 							layout.drawRecipe(matrixStack, -10, -10);
 						}, path, true);
 					}

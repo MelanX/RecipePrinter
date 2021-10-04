@@ -8,6 +8,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.load.registration.RecipeCategoryRegistration;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @JeiPlugin
@@ -22,7 +23,7 @@ public class PrinterJEI implements IModPlugin {
 	}
 
 	@Override
-	public void registerCategories(IRecipeCategoryRegistration registration) {
+	public void registerCategories(@Nonnull IRecipeCategoryRegistration registration) {
 		if (registration instanceof RecipeCategoryRegistration)
 			REG = ((RecipeCategoryRegistration) registration);
 	}
