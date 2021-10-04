@@ -24,7 +24,7 @@ public class RenderHelperMod {
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.getInstance().modid, "textures/gui/icons.png");
 
     public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
-        Minecraft.getInstance().getTextureManager().bind(texture);
+        Minecraft.getInstance().getTextureManager().bindForSetup(texture);
         GuiComponent.blit(poseStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
         poseStack.translate(0, 0, 100);
     }
@@ -34,7 +34,7 @@ public class RenderHelperMod {
     }
 
     public static void renderDefaultBackground(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
-        Minecraft.getInstance().getTextureManager().bind(RenderHelper.TEXTURE_WHITE);
+        Minecraft.getInstance().getTextureManager().bindForSetup(RenderHelper.TEXTURE_WHITE);
         RenderHelper.rgb(COLOR_GUI_BACKGROUND);
         GuiComponent.blit(poseStack, 0, 0, 0, 0, width, height, 256, 256);
         RenderHelper.resetColor();
@@ -46,7 +46,7 @@ public class RenderHelperMod {
     }
 
     public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
-        Minecraft.getInstance().getTextureManager().bind(icon.texture);
+        Minecraft.getInstance().getTextureManager().bindForSetup(icon.texture);
         poseStack.pushPose();
         poseStack.translate(x, y, 10);
         poseStack.scale((float) width / icon.width, (float) height / icon.height, 1);

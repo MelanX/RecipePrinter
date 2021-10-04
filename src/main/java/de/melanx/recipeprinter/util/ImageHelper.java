@@ -1,6 +1,7 @@
 package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,7 +35,7 @@ public class ImageHelper {
             realHeight = 512;
         }
 
-        RenderTarget fb = new RenderTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
+        RenderTarget fb = new TextureTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
 
         RenderSystem.pushMatrix();
         RenderSystem.enableBlend();
@@ -92,7 +93,7 @@ public class ImageHelper {
         RenderSystem.disableBlend();
         RenderSystem.popMatrix();
 
-        NativeImage img = Screenshot.takeScreenshot(realWidth, realHeight, fb);
+        NativeImage img = Screenshot.takeScreenshot(fb);
 
         if (includeFrame && !tooLarge) {
             applyFrame(img, width, height, scale);
