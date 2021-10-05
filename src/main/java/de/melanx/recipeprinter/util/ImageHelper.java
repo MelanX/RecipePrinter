@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import de.melanx.recipeprinter.RecipePrinter;
 import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
@@ -51,9 +52,11 @@ public class ImageHelper {
         RenderSystem.matrixMode(GL11.GL_PROJECTION);
         RenderSystem.loadIdentity();
         if (tooLarge) {
-            RenderSystem.ortho(0.0D, 512, 512, 0.0D, 1000.0D, 3000.0D);
+            Matrix4f matrix4f = Matrix4f.orthographic(0, 512, 512, 0, 1000.0F, 3000.0F);
+            RenderSystem.setProjectionMatrix(matrix4f);
         } else {
-            RenderSystem.ortho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
+            Matrix4f matrix4f = Matrix4f.orthographic(0, width, height, 0, 1000.0F, 3000.0F);
+            RenderSystem.setProjectionMatrix(matrix4f);
         }
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
         RenderSystem.loadIdentity();
