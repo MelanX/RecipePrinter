@@ -13,5 +13,5 @@ public class ModConfig {
 
     @Config("The amount of items per row when rendering creative tabs")
     @IntRange(min = 1)
-    public static int itemsPerRow;
+    public static int itemsPerRow = 9;
 }
