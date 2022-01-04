@@ -2,6 +2,7 @@ package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,6 +21,8 @@ import java.util.function.BiConsumer;
 
 public class ImageHelper {
 
+    private static final int TOO_LARGE_SIZE = 512;
+
     public static void addRenderJob(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath, boolean includeFrame) {
         Minecraft.getInstance().progressTasks.add(() -> render(width, height, scale, renderFunc, imagePath, includeFrame));
     }
@@ -32,13 +35,14 @@ public class ImageHelper {
         int maxTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
         if (realWidth > maxTextureSize || realHeight > maxTextureSize) {
             tooLarge = true;
-            realWidth = 512;
-            realHeight = 512;
+            realWidth = TOO_LARGE_SIZE;
+            realHeight = TOO_LARGE_SIZE;
         }
 
         RenderTarget fb = new TextureTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
 
-        RenderSystem.pushMatrix();
+        PoseStack ps2 = RenderSystem.getModelViewStack();
+        ps2.pushPose();
         RenderSystem.enableBlend();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
         fb.bindWrite(true);
@@ -49,25 +53,22 @@ public class ImageHelper {
 
         RenderSystem.viewport(0, 0, realWidth, realHeight);
 
-        RenderSystem.matrixMode(GL11.GL_PROJECTION);
-        RenderSystem.loadIdentity();
+        ps2.setIdentity();
         if (tooLarge) {
-            Matrix4f matrix4f = Matrix4f.orthographic(0, 512, 512, 0, 1000.0F, 3000.0F);
+            Matrix4f matrix4f = Matrix4f.orthographic(0, TOO_LARGE_SIZE, TOO_LARGE_SIZE, 0, 1000.0F, 3000.0F);
             RenderSystem.setProjectionMatrix(matrix4f);
         } else {
             Matrix4f matrix4f = Matrix4f.orthographic(0, width, height, 0, 1000.0F, 3000.0F);
             RenderSystem.setProjectionMatrix(matrix4f);
         }
-        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
-        RenderSystem.loadIdentity();
 
         PoseStack poseStack = new PoseStack();
         poseStack.translate(0, 0, -2000);
-        com.mojang.blaze3d.platform.Lighting.setupFor3DItems();
+        Lighting.setupFor3DItems();
 
         MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
-        RenderSystem.defaultAlphaFunc();
+        RenderSystem.defaultBlendFunc();
 
         if (tooLarge) {
             String[] msg = new String[]{
@@ -94,7 +95,8 @@ public class ImageHelper {
         }
 
         RenderSystem.disableBlend();
-        RenderSystem.popMatrix();
+        RenderSystem.applyModelViewMatrix();
+        ps2.popPose();
 
         NativeImage img = Screenshot.takeScreenshot(fb);
 

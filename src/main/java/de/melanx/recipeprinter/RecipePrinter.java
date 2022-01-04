@@ -19,8 +19,6 @@ public final class RecipePrinter extends ModX {
     private static RecipePrinter instance;
 
     public RecipePrinter() {
-        super("recipeprinter", null);
-
         instance = this;
 
         try {
@@ -62,7 +60,7 @@ public final class RecipePrinter extends ModX {
     }
 
     @Override
-    protected void clientSetup(FMLClientSetupEvent fmlClientSetupEvent) {
+    protected void clientSetup(FMLClientSetupEvent event) {
 
     }
 }
