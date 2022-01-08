@@ -41,8 +41,9 @@ public class ImageHelper {
 
         RenderTarget fb = new TextureTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
 
-        PoseStack ps2 = RenderSystem.getModelViewStack();
-        ps2.pushPose();
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        
         RenderSystem.enableBlend();
         RenderSystem.clear(16640, Minecraft.ON_OSX);
         fb.bindWrite(true);
@@ -53,13 +54,12 @@ public class ImageHelper {
 
         RenderSystem.viewport(0, 0, realWidth, realHeight);
 
-        ps2.setIdentity();
+        modelViewStack.setIdentity();
+        RenderSystem.applyModelViewMatrix();
         if (tooLarge) {
-            Matrix4f matrix4f = Matrix4f.orthographic(0, TOO_LARGE_SIZE, TOO_LARGE_SIZE, 0, 1000.0F, 3000.0F);
-            RenderSystem.setProjectionMatrix(matrix4f);
+            RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, TOO_LARGE_SIZE, 0, TOO_LARGE_SIZE, 1000, 3000));
         } else {
-            Matrix4f matrix4f = Matrix4f.orthographic(0, width, height, 0, 1000.0F, 3000.0F);
-            RenderSystem.setProjectionMatrix(matrix4f);
+            RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, width, 0, height, 1000, 3000));
         }
 
         PoseStack poseStack = new PoseStack();
@@ -69,6 +69,7 @@ public class ImageHelper {
         MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
         RenderSystem.defaultBlendFunc();
+        RenderSystem.enableTexture();
 
         if (tooLarge) {
             String[] msg = new String[]{
@@ -95,8 +96,8 @@ public class ImageHelper {
         }
 
         RenderSystem.disableBlend();
+        modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
-        ps2.popPose();
 
         NativeImage img = Screenshot.takeScreenshot(fb);
 

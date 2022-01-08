@@ -20,7 +20,7 @@ public class Util {
     public static void renderItemCategory(PoseStack poseStack, MultiBufferSource buffer, NonNullList<ItemStack> stacks, int rows, int itemsPerRow, CreativeModeTab category) {
         RenderHelperMod.renderDefaultBackground(poseStack, buffer, itemsPerRow * 18 + 8, rows * 18 + 24);
         RenderHelperMod.renderItem(poseStack, buffer, category.getIconItem(), 5, 3);
-        Minecraft.getInstance().font.draw(poseStack, category.getDisplayName().getString(), 25, 8, Color.DARK_GRAY.getRGB());
+        Minecraft.getInstance().font.draw(poseStack, category.getDisplayName().getString(), 25, 8, Color.DARK_GRAY.getRGB() & 0xFFFFFF);
         RenderHelper.resetColor();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < itemsPerRow; x++) {
