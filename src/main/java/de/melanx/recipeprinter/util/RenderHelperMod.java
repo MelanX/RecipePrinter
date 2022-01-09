@@ -66,24 +66,27 @@ public class RenderHelperMod {
 //        RenderHelperItem.renderItemGui(poseStack, buffer, stack, x, y, 16, true);
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
+        RenderHelper.resetColor();
 
         // As the item render method does not accept a matrix stack to apply transformations,
         // we need to do it manually.
-        PoseStack ps2 = RenderSystem.getModelViewStack();
-        ps2.pushPose();
-        ps2.mulPoseMatrix(poseStack.last().pose());
+        PoseStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushPose();
+        modelViewStack.mulPoseMatrix(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
         Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
-        ps2.popPose();
+        modelViewStack.popPose();
+        RenderSystem.applyModelViewMatrix();
 
         poseStack.translate(0, 0, 100);
 
         // Same as above
-        ps2.pushPose();
-        ps2.mulPoseMatrix(poseStack.last().pose());
+        modelViewStack.pushPose();
+        modelViewStack.mulPoseMatrix(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
         Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, null);
-        ps2.popPose();
+        modelViewStack.popPose();
+        RenderSystem.applyModelViewMatrix();
 
         RenderHelper.resetColor();
         poseStack.popPose();
