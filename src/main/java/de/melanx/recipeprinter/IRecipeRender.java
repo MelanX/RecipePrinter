@@ -18,7 +18,7 @@ public interface IRecipeRender<T extends Recipe<?>> {
 
     int getRecipeHeight();
 
-    void render(T recipe, PoseStack matrixStack, MultiBufferSource buffer);
+    void render(T recipe, PoseStack poseStack, MultiBufferSource buffer);
 
     default double getScaleFactor() {
         return ModConfig.scale;

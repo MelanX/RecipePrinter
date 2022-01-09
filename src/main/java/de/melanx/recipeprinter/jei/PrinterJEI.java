@@ -24,7 +24,8 @@ public class PrinterJEI implements IModPlugin {
 
 	@Override
 	public void registerCategories(@Nonnull IRecipeCategoryRegistration registration) {
-		if (registration instanceof RecipeCategoryRegistration)
-			REG = ((RecipeCategoryRegistration) registration);
-	}
+        if (registration instanceof RecipeCategoryRegistration reg) {
+            REG = reg;
+        }
+    }
 }

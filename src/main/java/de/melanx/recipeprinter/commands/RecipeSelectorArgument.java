@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
 
@@ -44,7 +43,7 @@ public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
             builder.suggest(theString + "*");
         }
         //noinspection ConstantConditions
-        for (ResourceLocation rl : Minecraft.getInstance().getSingleplayerServer().getRecipeManager().getRecipeIds().collect(Collectors.toList())) {
+        for (ResourceLocation rl : Minecraft.getInstance().getSingleplayerServer().getRecipeManager().getRecipeIds().toList()) {
             if (rl.toString().toLowerCase().startsWith(theString))
                 builder.suggest(rl.toString());
         }

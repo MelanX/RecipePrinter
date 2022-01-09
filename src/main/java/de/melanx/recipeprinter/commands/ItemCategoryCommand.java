@@ -38,8 +38,9 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
 
         int itemsPerRow = ModConfig.itemsPerRow;
         int rows = stacks.size() / itemsPerRow;
-        if (rows * itemsPerRow < stacks.size())
+        if (rows * itemsPerRow < stacks.size()) {
             rows += 1;
+        }
         int effectiveFinalRows = rows;
 
         Path path = context.getSource().getServer().getServerDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("item_groups").resolve(group.getRecipeFolderName().replace('/', '-') + ".png");
@@ -51,7 +52,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             }
         }
 
-        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (matrixStack, buffer) -> Util.renderItemCategory(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path);
+        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (poseStack, buffer) -> Util.renderItemCategory(poseStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path);
 
         context.getSource().sendSuccess(new TextComponent("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
 

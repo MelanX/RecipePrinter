@@ -23,7 +23,7 @@ public class RenderHelperMod {
     public static final int COLOR_GUI_BACKGROUND_FRAME_INNER_BR = 0xB3B3B3;
     public static final int COLOR_GUI_BACKGROUND_FRAME_INNER_TL = 0xD8D8D8;
     public static final int COLOR_GUI_BACKGROUND_FRAME_OUTER = 0x999999;
-    
+
     public static final int TEXT_COLOR = Color.DARK_GRAY.getRGB();
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.getInstance().modid, "textures/gui/icons.png");
 
@@ -40,24 +40,24 @@ public class RenderHelperMod {
     }
 
     public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, boolean includeFrame) {
-        renderBackground(texture, poseStack, buffer, x, y, width, height, 256, 256, includeFrame);
+        RenderHelperMod.renderBackground(texture, poseStack, buffer, x, y, width, height, 256, 256, includeFrame);
     }
 
     public static void renderDefaultBackground(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
         RenderSystem.setShaderTexture(0, RenderHelper.TEXTURE_WHITE);
-        
+
         RenderHelper.rgb(COLOR_GUI_BACKGROUND);
         GuiComponent.blit(poseStack, 2, 2, 0, 0, width - 4, height - 4, 256, 256);
         RenderHelper.resetColor();
 
         applyFrame(poseStack, buffer, width, height);
-        
+
         poseStack.translate(0, 0, 100);
     }
 
     private static void applyFrame(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
         RenderSystem.setShaderTexture(0, RenderHelper.TEXTURE_WHITE);
-        
+
         RenderHelper.rgb(COLOR_GUI_BACKGROUND_FRAME_INNER_TL);
         GuiComponent.blit(poseStack, 2, 1, 0, 0, width - 4, 1, 256, 256);
         GuiComponent.blit(poseStack, 1, 2, 0, 0, 1, height - 4, 256, 256);
@@ -81,7 +81,7 @@ public class RenderHelperMod {
     }
 
     public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y) {
-        render(icon, poseStack, buffer, x, y, icon.width, icon.height);
+        RenderHelperMod.render(icon, poseStack, buffer, x, y, icon.width, icon.height);
     }
 
     public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
@@ -102,7 +102,6 @@ public class RenderHelperMod {
     }
 
     public static void renderItem(PoseStack poseStack, MultiBufferSource buffer, ItemStack stack, int x, int y) {
-//        RenderHelperItem.renderItemGui(poseStack, buffer, stack, x, y, 16, true);
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
         RenderHelper.resetColor();
@@ -135,7 +134,7 @@ public class RenderHelperMod {
         if (!ingredient.isEmpty()) {
             ItemStack[] stacks = ingredient.getItems();
             if (stacks.length != 0) {
-                renderItem(poseStack, buffer, stacks[0], x, y);
+                RenderHelperMod.renderItem(poseStack, buffer, stacks[0], x, y);
             }
         }
     }
