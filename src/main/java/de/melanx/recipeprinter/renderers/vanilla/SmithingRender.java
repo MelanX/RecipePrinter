@@ -37,7 +37,7 @@ public class SmithingRender implements IRecipeRender<UpgradeRecipe> {
 
     @Override
     public void render(UpgradeRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 15, 5, 140, 63);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 15, 5, 140, 63, true);
         poseStack.translate(0, 0, 10);
         RenderHelperMod.renderSlot(poseStack, buffer, 61, 42);
         RenderHelperMod.renderIngredient(poseStack, buffer, recipe.base, 12, 42);

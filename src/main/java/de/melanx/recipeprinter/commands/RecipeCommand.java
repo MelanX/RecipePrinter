@@ -52,7 +52,7 @@ public class RecipeCommand implements Command<CommandSourceStack> {
                         }
                     }
                     //noinspection unchecked
-                    ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (matrixStack, buffer) -> ((IRecipeRender<Recipe<?>>) render).render(recipe, matrixStack, buffer), path, true);
+                    ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (matrixStack, buffer) -> ((IRecipeRender<Recipe<?>>) render).render(recipe, matrixStack, buffer), path);
                 }
             });
         }

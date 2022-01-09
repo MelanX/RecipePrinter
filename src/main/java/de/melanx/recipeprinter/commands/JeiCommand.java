@@ -63,7 +63,7 @@ public class JeiCommand implements Command<CommandSourceStack> {
 						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth(), recipeCategory.getBackground().getHeight(), ModConfig.scale * 2., (matrixStack, buffer) -> {
 							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", recipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
 							layout.drawRecipe(matrixStack, -10, -10);
-						}, path, true);
+						}, path);
 					}
 				} catch (RuntimeException e) {
 					RecipePrinter.getInstance().logger.error("Could not print recipe {}: {}", iRecipe.getId(), e.getMessage());

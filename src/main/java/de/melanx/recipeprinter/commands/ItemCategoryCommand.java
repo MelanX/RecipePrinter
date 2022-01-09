@@ -51,7 +51,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             }
         }
 
-        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (matrixStack, buffer) -> Util.renderItemCategory(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path, true);
+        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (matrixStack, buffer) -> Util.renderItemCategory(matrixStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path);
 
         context.getSource().sendSuccess(new TextComponent("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
 

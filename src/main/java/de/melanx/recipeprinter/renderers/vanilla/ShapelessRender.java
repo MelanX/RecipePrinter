@@ -40,7 +40,7 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
 
     @Override
     public void render(ShapelessRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62, true);
         poseStack.pushPose();
         poseStack.translate(108, 4, 0);
         poseStack.scale(1f / 3, 1f / 3, 1);

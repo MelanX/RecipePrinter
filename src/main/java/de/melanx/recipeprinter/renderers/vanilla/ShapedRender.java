@@ -36,7 +36,7 @@ public class ShapedRender implements IRecipeRender<ShapedRecipe> {
 
     @Override
     public void render(ShapedRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(ShapelessRender.BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62);
+        RenderHelperMod.renderBackground(ShapelessRender.BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62, true);
         RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         for (int x = 0; x < recipe.getRecipeWidth(); x++) {

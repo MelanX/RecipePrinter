@@ -10,7 +10,6 @@ import com.mojang.math.Matrix4f;
 import de.melanx.recipeprinter.RecipePrinter;
 import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Screenshot;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.lwjgl.opengl.GL11;
@@ -23,11 +22,11 @@ public class ImageHelper {
 
     private static final int TOO_LARGE_SIZE = 512;
 
-    public static void addRenderJob(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath, boolean includeFrame) {
-        Minecraft.getInstance().progressTasks.add(() -> render(width, height, scale, renderFunc, imagePath, includeFrame));
+    public static void addRenderJob(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath) {
+        Minecraft.getInstance().progressTasks.add(() -> render(width, height, scale, renderFunc, imagePath));
     }
 
-    public static void render(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath, boolean includeFrame) {
+    public static void render(int width, int height, double scale, BiConsumer<PoseStack, MultiBufferSource> renderFunc, Path imagePath) {
         int realWidth = (int) Math.round(scale * width);
         int realHeight = (int) Math.round(scale * height);
 
@@ -40,6 +39,8 @@ public class ImageHelper {
         }
 
         RenderTarget fb = new TextureTarget(realWidth, realHeight, true, Minecraft.ON_OSX);
+        fb.setClearColor(0, 0, 0, 0);
+        fb.clear(true);
 
         PoseStack modelViewStack = RenderSystem.getModelViewStack();
         modelViewStack.pushPose();
@@ -98,11 +99,7 @@ public class ImageHelper {
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
 
-        NativeImage img = Screenshot.takeScreenshot(fb);
-
-        if (includeFrame && !tooLarge) {
-            applyFrame(img, width, height, scale);
-        }
+        NativeImage img = takeNonOpaqueScreenshot(fb);
 
         try {
             img.writeToFile(imagePath);
@@ -110,34 +107,13 @@ public class ImageHelper {
             RecipePrinter.getInstance().logger.error("Could not print recipe: {}", e.getMessage());
         }
     }
-
-    private static void applyFrame(NativeImage img, int width, int height, double scale) {
-        img.fillRect(scale(0, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(0, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(width - 2, scale), scale(0, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(width - 1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(0, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(0, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(width - 2, scale), scale(height - 1, scale), scale(2, scale), scale(1, scale), 0x00000000);
-        img.fillRect(scale(width - 1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0x00000000);
-
-        img.fillRect(scale(1, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillRect(scale(width - 2, scale), scale(1, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillRect(scale(1, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-        img.fillRect(scale(width - 2, scale), scale(height - 2, scale), scale(1, scale), scale(1, scale), 0xFF999999);
-
-        img.fillRect(scale(2, scale), scale(0, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
-        img.fillRect(scale(2, scale), scale(height - 1, scale), scale(width - 4, scale), scale(1, scale), 0xFF999999);
-        img.fillRect(scale(0, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
-        img.fillRect(scale(width - 1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFF999999);
-
-        img.fillRect(scale(2, scale), scale(1, scale), scale(width - 4, scale), scale(1, scale), 0xFFD8D8D8);
-        img.fillRect(scale(2, scale), scale(height - 2, scale), scale(width - 4, scale), scale(1, scale), 0xFFB3B3B3);
-        img.fillRect(scale(1, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFD8D8D8);
-        img.fillRect(scale(width - 2, scale), scale(2, scale), scale(1, scale), scale(height - 4, scale), 0xFFB3B3B3);
-    }
-
-    private static int scale(int value, double scale) {
-        return (int) Math.round(value * scale);
+    
+    // See Screenshot.takeScreenshot
+    private static NativeImage takeNonOpaqueScreenshot(RenderTarget fb) {
+        NativeImage img = new NativeImage(fb.width, fb.height, false);
+        RenderSystem.bindTexture(fb.getColorTextureId());
+        img.downloadTexture(0, false);
+        img.flipY();
+        return img;
     }
 }

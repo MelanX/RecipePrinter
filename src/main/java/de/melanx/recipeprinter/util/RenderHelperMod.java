@@ -19,26 +19,65 @@ import java.awt.Color;
 
 public class RenderHelperMod {
 
-    public static final int COLOR_GUI_BACKGROUND = 0xc6c6c6;
+    public static final int COLOR_GUI_BACKGROUND = 0xC6C6C6;
+    public static final int COLOR_GUI_BACKGROUND_FRAME_INNER_BR = 0xB3B3B3;
+    public static final int COLOR_GUI_BACKGROUND_FRAME_INNER_TL = 0xD8D8D8;
+    public static final int COLOR_GUI_BACKGROUND_FRAME_OUTER = 0x999999;
+    
     public static final int TEXT_COLOR = Color.DARK_GRAY.getRGB();
     public static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(RecipePrinter.getInstance().modid, "textures/gui/icons.png");
 
-    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, int textureWidth, int textureHeight) {
+    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, int textureWidth, int textureHeight, boolean includeFrame) {
         RenderSystem.setShaderTexture(0, texture);
-        GuiComponent.blit(poseStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
+        RenderHelper.resetColor();
+        if (includeFrame) {
+            GuiComponent.blit(poseStack, 2, 2, x + 2, y + 2, width - 4, height - 4, textureWidth, textureHeight);
+            applyFrame(poseStack, buffer, width, height);
+        } else {
+            GuiComponent.blit(poseStack, 0, 0, x, y, width, height, textureWidth, textureHeight);
+        }
         poseStack.translate(0, 0, 100);
     }
 
-    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
-        renderBackground(texture, poseStack, buffer, x, y, width, height, 256, 256);
+    public static void renderBackground(ResourceLocation texture, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height, boolean includeFrame) {
+        renderBackground(texture, poseStack, buffer, x, y, width, height, 256, 256, includeFrame);
     }
 
     public static void renderDefaultBackground(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
         RenderSystem.setShaderTexture(0, RenderHelper.TEXTURE_WHITE);
+        
         RenderHelper.rgb(COLOR_GUI_BACKGROUND);
-        GuiComponent.blit(poseStack, 0, 0, 0, 0, width, height, 256, 256);
+        GuiComponent.blit(poseStack, 2, 2, 0, 0, width - 4, height - 4, 256, 256);
         RenderHelper.resetColor();
+
+        applyFrame(poseStack, buffer, width, height);
+        
         poseStack.translate(0, 0, 100);
+    }
+
+    private static void applyFrame(PoseStack poseStack, MultiBufferSource buffer, int width, int height) {
+        RenderSystem.setShaderTexture(0, RenderHelper.TEXTURE_WHITE);
+        
+        RenderHelper.rgb(COLOR_GUI_BACKGROUND_FRAME_INNER_TL);
+        GuiComponent.blit(poseStack, 2, 1, 0, 0, width - 4, 1, 256, 256);
+        GuiComponent.blit(poseStack, 1, 2, 0, 0, 1, height - 4, 256, 256);
+
+        RenderHelper.rgb(COLOR_GUI_BACKGROUND_FRAME_INNER_BR);
+        GuiComponent.blit(poseStack, 2, height - 2, 0, 0, width - 4, 1, 256, 256);
+        GuiComponent.blit(poseStack, width - 2, 2, 0, 0, 1, height - 4, 256, 256);
+
+        RenderHelper.rgb(COLOR_GUI_BACKGROUND_FRAME_OUTER);
+        GuiComponent.blit(poseStack, 1, 1, 0, 0, 1, 1, 256, 256);
+        GuiComponent.blit(poseStack, 1, height - 2, 0, 0, 1, 1, 256, 256);
+        GuiComponent.blit(poseStack, width - 2, 1, 0, 0, 1, 1, 256, 256);
+        GuiComponent.blit(poseStack, width - 2, height - 2, 0, 0, 1, 1, 256, 256);
+
+        GuiComponent.blit(poseStack, 2, 0, 0, 0, width - 4, 1, 256, 256);
+        GuiComponent.blit(poseStack, 0, 2, 0, 0, 1, height - 4, 256, 256);
+        GuiComponent.blit(poseStack, 2, height - 1, 0, 0, width - 4, 1, 256, 256);
+        GuiComponent.blit(poseStack, width - 1, 2, 0, 0, 1, height - 4, 256, 256);
+
+        RenderHelper.resetColor();
     }
 
     public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y) {

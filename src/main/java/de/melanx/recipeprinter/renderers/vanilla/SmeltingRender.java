@@ -51,10 +51,10 @@ public class SmeltingRender implements IRecipeRender<SmeltingRecipe> {
     }
 
     public static void render(AbstractCookingRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 51, 12, 90, 62);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 51, 12, 90, 62, true);
         poseStack.pushPose();
         poseStack.translate(6, 25, 10);
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 176, 0, 14, 14);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 176, 0, 14, 14, false);
         poseStack.popPose();
         RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 65, 23);
         RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 5, 5);
