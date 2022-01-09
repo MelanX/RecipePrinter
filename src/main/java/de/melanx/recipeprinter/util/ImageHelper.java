@@ -45,7 +45,7 @@ public class ImageHelper {
         modelViewStack.pushPose();
         
         RenderSystem.enableBlend();
-        RenderSystem.clear(16640, Minecraft.ON_OSX);
+        RenderSystem.clear(0x4100, Minecraft.ON_OSX);
         fb.bindWrite(true);
         FogRenderer.setupNoFog();
 
@@ -55,6 +55,7 @@ public class ImageHelper {
         RenderSystem.viewport(0, 0, realWidth, realHeight);
 
         modelViewStack.setIdentity();
+        modelViewStack.translate(0, 0, -2000);
         RenderSystem.applyModelViewMatrix();
         if (tooLarge) {
             RenderSystem.setProjectionMatrix(Matrix4f.orthographic(0, TOO_LARGE_SIZE, 0, TOO_LARGE_SIZE, 1000, 3000));
@@ -63,13 +64,11 @@ public class ImageHelper {
         }
 
         PoseStack poseStack = new PoseStack();
-        poseStack.translate(0, 0, -2000);
         Lighting.setupFor3DItems();
 
         MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
         RenderSystem.defaultBlendFunc();
-        RenderSystem.enableTexture();
 
         if (tooLarge) {
             String[] msg = new String[]{

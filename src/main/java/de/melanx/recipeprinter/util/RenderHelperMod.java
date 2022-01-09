@@ -7,7 +7,6 @@ import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import io.github.noeppi_noeppi.libx.render.RenderHelperFluid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +46,6 @@ public class RenderHelperMod {
     }
 
     public static void render(OverlayIcon icon, PoseStack poseStack, MultiBufferSource buffer, int x, int y, int width, int height) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, icon.texture);
         poseStack.pushPose();
         poseStack.translate(x, y, 10);
