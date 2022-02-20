@@ -92,7 +92,11 @@ public class ImageHelper {
             }
             RenderHelper.resetColor();
         } else {
-            renderFunc.accept(poseStack, buffer);
+            try {
+                renderFunc.accept(poseStack, buffer);
+            } catch (RuntimeException e) {
+                RecipePrinter.getInstance().logger.error("Could not print recipe: {}", e.getMessage());
+            }
         }
 
         RenderSystem.disableBlend();

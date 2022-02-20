@@ -13,6 +13,7 @@ import mezz.jei.gui.recipes.RecipeLayout;
 import mezz.jei.recipes.FocusGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.Recipe;
@@ -68,11 +69,14 @@ public class JeiCommand implements Command<CommandSourceStack> {
 							layout.drawRecipe(poseStack, -10, -10);
 						}, path);
 					}
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					RecipePrinter.getInstance().logger.error("Could not print recipe {}: {}", iRecipe.getId(), e.getMessage());
 				}
 			}));
+
+			context.getSource().sendSuccess(new TextComponent("Successfully printed " + rl), false);
 		}
+
 
 		return 0;
 	}
