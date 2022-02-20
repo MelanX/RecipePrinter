@@ -7,8 +7,10 @@ import de.melanx.recipeprinter.ModConfig;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.jei.PrinterJEI;
 import de.melanx.recipeprinter.util.ImageHelper;
+import mezz.jei.Internal;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.gui.recipes.RecipeLayout;
+import mezz.jei.recipes.FocusGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -58,10 +60,11 @@ public class JeiCommand implements Command<CommandSourceStack> {
 				RecipeLayout<?> layout;
 				try {
 					//noinspection unchecked
-					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, null, REG.getJeiHelpers().getModIdHelper(), 0, 0);
+					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, FocusGroup.EMPTY, Internal.getIngredientManager(), REG.getJeiHelpers().getModIdHelper(), 0, 0);
 					if (layout != null) {
-						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth(), recipeCategory.getBackground().getHeight(), ModConfig.scale * 2., (poseStack, buffer) -> {
+						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth() + 8, recipeCategory.getBackground().getHeight() + 8, ModConfig.scale * 2., (poseStack, buffer) -> {
 							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", recipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
+							poseStack.translate(4, 4, 0);
 							layout.drawRecipe(poseStack, -10, -10);
 						}, path);
 					}
