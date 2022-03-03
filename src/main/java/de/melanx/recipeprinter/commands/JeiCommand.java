@@ -61,7 +61,7 @@ public class JeiCommand implements Command<CommandSourceStack> {
 				RecipeLayout<?> layout;
 				try {
 					//noinspection unchecked
-					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, FocusGroup.EMPTY, Internal.getIngredientManager(), REG.getJeiHelpers().getModIdHelper(), 0, 0);
+					layout = RecipeLayout.create(-1, (IRecipeCategory<Recipe<?>>) recipeCategory, iRecipe, FocusGroup.EMPTY, Internal.getRegisteredIngredients(), REG.getJeiHelpers().getModIdHelper(), 0, 0);
 					if (layout != null) {
 						ImageHelper.addRenderJob(recipeCategory.getBackground().getWidth() + 8, recipeCategory.getBackground().getHeight() + 8, ModConfig.scale * 2., (poseStack, buffer) -> {
 							RecipePrinter.getInstance().logger.debug("Printing {} {} {}%", recipeCategory.getUid(), iRecipe.getId(), Mth.floor(100. * i.getAndIncrement() / matches.get()));
