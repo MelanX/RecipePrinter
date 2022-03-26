@@ -1,8 +1,8 @@
 buildscript {
-    apply from: 'https://noeppi-noeppi.github.io/ModUtils/v3/buildscript.gradle', to: buildscript
+    apply from: 'https://noeppi-noeppi.github.io/ModUtils/experimental/buildscript.gradle', to: buildscript
 }
 
-apply from: 'https://noeppi-noeppi.github.io/ModUtils/v3/mod.gradle'
+apply from: 'https://noeppi-noeppi.github.io/ModUtils/experimental/mod.gradle'
 apply plugin: 'io.github.noeppi_noeppi.tools.modgradle.cursedep'
 
 repositories {
