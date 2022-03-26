@@ -24,7 +24,7 @@ public final class RecipePrinter extends ModX {
         try {
             Class.forName("net.minecraft.client.main.Main"); // Luckily this class is never renamed.
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
-            throw new IllegalStateException("RecipePrinter can only run in singleplayer.", e);
+            throw new IllegalStateException("Recipe Printer can only run in singleplayer.", e);
         }
 
         MinecraftForge.EVENT_BUS.addListener(RecipePrinterCommands::register);
@@ -48,15 +48,6 @@ public final class RecipePrinter extends ModX {
         RecipeRenderers.registerRecipeRender(new CampfireRender());
         RecipeRenderers.registerRecipeRender(new SmithingRender());
         RecipeRenderers.registerRecipeRender(new StonecuttingRender());
-
-//        if (ModList.get().isLoaded("botania")) {
-//            RecipeRenderers.registerRecipeRender(new BrewRender());
-//            RecipeRenderers.registerRecipeRender(new ElvenTradeRender());
-//            RecipeRenderers.registerRecipeRender(new InfusionRender());
-//            RecipeRenderers.registerRecipeRender(new PetalApothecaryRender());
-//            RecipeRenderers.registerRecipeRender(new PureDaisyRender());
-//            RecipeRenderers.registerRecipeRender(new RunicAltarRender());
-//        }
     }
 
     @Override

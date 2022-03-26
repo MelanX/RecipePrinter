@@ -27,9 +27,6 @@ repositories {
 dependencies {
     annotationProcessor fg.deobf("io.github.noeppi_noeppi.mods:LibX:1.18.2-3.2.0")
 
-//    implementation fg.deobf("vazkii.botania:Botania:1.16.3-407-SNAPSHOT")
-//    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
-//    implementation fg.deobf("vazkii.patchouli:Patchouli:1.16.2-44")
     implementation fg.deobf("io.github.noeppi_noeppi.mods:LibX:1.18.2-3.2.0")
     implementation fg.deobf("mezz.jei:jei-1.18.2:9.4.1.114")
 }
