@@ -3,8 +3,6 @@ package de.melanx.recipeprinter.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.RecipePrinter;
-import io.github.noeppi_noeppi.libx.render.RenderHelper;
-import io.github.noeppi_noeppi.libx.render.RenderHelperFluid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
+import org.moddingx.libx.render.RenderHelper;
+import org.moddingx.libx.render.RenderHelperFluid;
 
 import java.awt.Color;
 

@@ -4,16 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.RenderHelperMod;
-import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import org.moddingx.libx.render.RenderHelper;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
@@ -58,7 +59,7 @@ public class SmeltingRender implements IRecipeRender<SmeltingRecipe> {
         poseStack.popPose();
         RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 65, 23);
         RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 5, 5);
-        TranslatableComponent time = new TranslatableComponent(RecipePrinter.getInstance().modid + ".time", BigDecimal.valueOf(recipe.getCookingTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
+        MutableComponent time = Component.translatable(RecipePrinter.getInstance().modid + ".time", BigDecimal.valueOf(recipe.getCookingTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
         Minecraft.getInstance().font.draw(poseStack, time.getString(), 26, 48, RenderHelperMod.TEXT_COLOR);
         RenderHelper.resetColor();
     }

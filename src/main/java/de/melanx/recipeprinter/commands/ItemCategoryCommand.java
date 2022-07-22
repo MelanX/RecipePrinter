@@ -10,7 +10,7 @@ import de.melanx.recipeprinter.util.ImageHelper;
 import de.melanx.recipeprinter.util.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -27,13 +27,13 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
         ResourceLocation rl = context.getArgument("group", ResourceLocation.class);
         CreativeModeTab group = Arrays.stream(CreativeModeTab.TABS).filter(g -> rl.getPath().equalsIgnoreCase(g.getRecipeFolderName())).findFirst().orElse(null);
         if (group == null || !Util.isNormalItemCategory(group)) {
-            throw new SimpleCommandExceptionType(new TextComponent("This ItemGroup does not exist.")).create();
+            throw new SimpleCommandExceptionType(Component.literal("This ItemGroup does not exist.")).create();
         }
         NonNullList<ItemStack> stacks = NonNullList.create();
         group.fillItemList(stacks);
 
         if (stacks.isEmpty()) {
-            throw new SimpleCommandExceptionType(new TextComponent("This ItemGroup is empty")).create();
+            throw new SimpleCommandExceptionType(Component.literal("This ItemGroup is empty")).create();
         }
 
         int itemsPerRow = ModConfig.itemsPerRow;
@@ -54,7 +54,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
 
         ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (poseStack, buffer) -> Util.renderItemCategory(poseStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path);
 
-        context.getSource().sendSuccess(new TextComponent("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
+        context.getSource().sendSuccess(Component.literal("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
 
         return 0;
     }

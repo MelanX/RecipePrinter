@@ -8,7 +8,7 @@ import de.melanx.recipeprinter.RecipeRenderers;
 import de.melanx.recipeprinter.util.ImageHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -58,11 +58,11 @@ public class RecipeCommand implements Command<CommandSourceStack> {
         }
 
         if (typesNotSupported.isEmpty()) {
-            context.getSource().sendSuccess(new TextComponent("Started rendering " + recipesTotal.get() + " recipes."), true);
+            context.getSource().sendSuccess(Component.literal("Started rendering " + recipesTotal.get() + " recipes."), true);
         } else {
-            context.getSource().sendSuccess(new TextComponent("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
+            context.getSource().sendSuccess(Component.literal("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
             for (RecipeType<?> rt : typesNotSupported) {
-                context.getSource().sendSuccess(new TextComponent("Could not render recipes: " + rt.toString()), true);
+                context.getSource().sendSuccess(Component.literal("Could not render recipes: " + rt.toString()), true);
             }
         }
 

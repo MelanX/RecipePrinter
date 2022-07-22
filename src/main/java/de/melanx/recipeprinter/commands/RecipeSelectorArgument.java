@@ -8,7 +8,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.synchronization.ArgumentSerializer;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
@@ -57,22 +58,43 @@ public class RecipeSelectorArgument implements ArgumentType<RecipeSelector> {
         );
     }
 
-    public static class Serializer implements ArgumentSerializer<RecipeSelectorArgument> {
+    public static class Serializer implements ArgumentTypeInfo<RecipeSelectorArgument, Serializer.Template> {
 
         @Override
-        public void serializeToNetwork(@Nonnull RecipeSelectorArgument argument, @Nonnull FriendlyByteBuf buffer) {
+        public void serializeToNetwork(@Nonnull Template argument, @Nonnull FriendlyByteBuf buffer) {
 
         }
 
         @Nonnull
         @Override
-        public RecipeSelectorArgument deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
-            return new RecipeSelectorArgument();
+        public Template deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
+            return new Template();
         }
 
         @Override
-        public void serializeToJson(@Nonnull RecipeSelectorArgument argument, @Nonnull JsonObject json) {
+        public void serializeToJson(@Nonnull Template argument, @Nonnull JsonObject json) {
 
+        }
+
+        @Nonnull
+        @Override
+        public Template unpack(@Nonnull RecipeSelectorArgument argument) {
+            return new Template();
+        }
+
+        public final class Template implements ArgumentTypeInfo.Template<RecipeSelectorArgument> {
+
+            @Nonnull
+            @Override
+            public RecipeSelectorArgument instantiate(@Nonnull CommandBuildContext context) {
+                return new RecipeSelectorArgument();
+            }
+
+            @Nonnull
+            @Override
+            public ArgumentTypeInfo<RecipeSelectorArgument, ?> type() {
+                return Serializer.this;
+            }
         }
     }
 }

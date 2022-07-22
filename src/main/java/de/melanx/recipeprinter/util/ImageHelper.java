@@ -8,11 +8,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import de.melanx.recipeprinter.RecipePrinter;
-import io.github.noeppi_noeppi.libx.render.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.lwjgl.opengl.GL11;
+import org.moddingx.libx.render.RenderHelper;
 
 import java.io.IOException;
 import java.nio.file.Path;

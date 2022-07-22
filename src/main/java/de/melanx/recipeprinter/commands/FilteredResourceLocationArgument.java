@@ -9,10 +9,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
-import net.minecraft.commands.synchronization.ArgumentSerializer;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,7 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
     public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation rl = this.rla.parse(reader);
         if (!this.args.get().contains(rl)) {
-            throw new SimpleCommandExceptionType(new TextComponent("This resource can not be found.")).create();
+            throw new SimpleCommandExceptionType(Component.literal("This resource can not be found.")).create();
         }
         return rl;
     }
@@ -62,11 +63,11 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
         return examples;
     }
 
-    public static class Serializer implements ArgumentSerializer<FilteredResourceLocationArgument> {
+    public static class Serializer implements ArgumentTypeInfo<FilteredResourceLocationArgument, Serializer.Template> {
 
         @Override
-        public void serializeToNetwork(FilteredResourceLocationArgument argument, FriendlyByteBuf buffer) {
-            List<ResourceLocation> rls = argument.args.get();
+        public void serializeToNetwork(Serializer.Template template, FriendlyByteBuf buffer) {
+            List<ResourceLocation> rls = template.args.get();
             buffer.writeInt(rls.size());
             for (ResourceLocation rl : rls) {
                 buffer.writeResourceLocation(rl);
@@ -75,21 +76,51 @@ public class FilteredResourceLocationArgument implements ArgumentType<ResourceLo
 
         @Nonnull
         @Override
-        public FilteredResourceLocationArgument deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
+        public Serializer.Template deserializeFromNetwork(@Nonnull FriendlyByteBuf buffer) {
             int amount = buffer.readInt();
             List<ResourceLocation> rls = new ArrayList<>();
             for (int i = 0; i < amount; i++) {
                 rls.add(buffer.readResourceLocation());
             }
-            return new FilteredResourceLocationArgument(() -> rls);
+
+            return new Template(() -> rls);
         }
 
         @Override
-        public void serializeToJson(FilteredResourceLocationArgument argument, @Nonnull JsonObject json) {
+        public void serializeToJson(Serializer.Template template, @Nonnull JsonObject json) {
             JsonArray list = new JsonArray();
-            for (ResourceLocation rl : argument.args.get())
+            for (ResourceLocation rl : template.args.get()) {
                 list.add(rl.toString());
+            }
+
             json.add("resourceLocations", list);
+        }
+
+        @Nonnull
+        @Override
+        public Template unpack(@Nonnull FilteredResourceLocationArgument argument) {
+            return new Template(argument.args);
+        }
+
+        public final class Template implements ArgumentTypeInfo.Template<FilteredResourceLocationArgument> {
+
+            private final Supplier<List<ResourceLocation>> args;
+
+            Template(Supplier<List<ResourceLocation>> args) {
+                this.args = args;
+            }
+
+            @Nonnull
+            @Override
+            public FilteredResourceLocationArgument instantiate(@Nonnull CommandBuildContext context) {
+                return new FilteredResourceLocationArgument(this.args);
+            }
+
+            @Nonnull
+            @Override
+            public ArgumentTypeInfo<FilteredResourceLocationArgument, ?> type() {
+                return Serializer.this;
+            }
         }
     }
 }
