@@ -7,6 +7,7 @@ import de.melanx.recipeprinter.jei.PrinterJEI;
 import de.melanx.recipeprinter.renderers.vanilla.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -33,7 +34,6 @@ public final class RecipePrinter extends ModX {
         }
 
         MinecraftForge.EVENT_BUS.addListener(RecipePrinterCommands::register);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(PrinterJEI::registerReloadListeners);
     }
 
     @Nonnull
@@ -43,6 +43,9 @@ public final class RecipePrinter extends ModX {
 
     @Override
     protected void setup(FMLCommonSetupEvent event) {
+        if (ModList.get().isLoaded("jei")) {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(PrinterJEI::registerReloadListeners);
+        }
         ArgumentTypeInfos.registerByClass(RecipeSelectorArgument.class, new RecipeSelectorArgument.Serializer());
         ArgumentTypeInfos.registerByClass(FilteredResourceLocationArgument.class, new FilteredResourceLocationArgument.Serializer());
 
