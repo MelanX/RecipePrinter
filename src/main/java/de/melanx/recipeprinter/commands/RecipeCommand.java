@@ -1,11 +1,12 @@
 package de.melanx.recipeprinter.commands;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.RecipeRenderers;
-import de.melanx.recipeprinter.util.ImageHelper;
+import de.melanx.recipeprinter.util.PrinterJob;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import org.moddingx.libx.render.target.ImageHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecipeCommand implements Command<CommandSourceStack> {
@@ -51,8 +55,17 @@ public class RecipeCommand implements Command<CommandSourceStack> {
                             throw new RuntimeException(e);
                         }
                     }
-                    //noinspection unchecked
-                    ImageHelper.addRenderJob(render.getRecipeWidth(), render.getRecipeHeight(), render.getScaleFactor(), (poseStack, buffer) -> ((IRecipeRender<Recipe<?>>) render).render(recipe, poseStack, buffer), path);
+
+                    CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(render.getRecipeWidth(), render.getRecipeHeight(), (int) render.getScaleFactor(), (poseStack, buffer) -> {
+                        //noinspection unchecked
+                        ((IRecipeRender<Recipe<?>>) render).render(recipe, poseStack, buffer);
+                    }));
+
+                    try {
+                        img.get().writeToFile(path);
+                    } catch (IOException | InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }

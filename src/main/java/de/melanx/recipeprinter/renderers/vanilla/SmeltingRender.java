@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.RenderHelperMod;
+import de.melanx.recipeprinter.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -57,7 +58,7 @@ public class SmeltingRender implements IRecipeRender<SmeltingRecipe> {
         poseStack.translate(6, 25, 10);
         RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 176, 0, 14, 14, false);
         poseStack.popPose();
-        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 65, 23);
+        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 65, 23);
         RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 5, 5);
         MutableComponent time = Component.translatable(RecipePrinter.getInstance().modid + ".time", BigDecimal.valueOf(recipe.getCookingTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
         Minecraft.getInstance().font.draw(poseStack, time.getString(), 26, 48, RenderHelperMod.TEXT_COLOR);

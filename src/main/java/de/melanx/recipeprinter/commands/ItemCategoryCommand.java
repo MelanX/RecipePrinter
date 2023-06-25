@@ -1,36 +1,40 @@
 package de.melanx.recipeprinter.commands;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.melanx.recipeprinter.ModConfig;
 import de.melanx.recipeprinter.RecipePrinter;
-import de.melanx.recipeprinter.util.ImageHelper;
+import de.melanx.recipeprinter.util.PrinterJob;
 import de.melanx.recipeprinter.util.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import org.moddingx.libx.render.target.ImageHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ItemCategoryCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        ResourceLocation rl = context.getArgument("group", ResourceLocation.class);
-        CreativeModeTab group = Arrays.stream(CreativeModeTab.TABS).filter(g -> rl.getPath().equalsIgnoreCase(g.getRecipeFolderName())).findFirst().orElse(null);
+        String name = StringArgumentType.getString(context, "group");
+        CreativeModeTab group = CreativeModeTabs.allTabs().stream().filter(g -> g.getDisplayName().getString().equals(name)).findFirst().orElse(null);
         if (group == null || !Util.isNormalItemCategory(group)) {
             throw new SimpleCommandExceptionType(Component.literal("This ItemGroup does not exist.")).create();
         }
         NonNullList<ItemStack> stacks = NonNullList.create();
-        group.fillItemList(stacks);
+        stacks.addAll(group.getDisplayItems());
 
         if (stacks.isEmpty()) {
             throw new SimpleCommandExceptionType(Component.literal("This ItemGroup is empty")).create();
@@ -43,7 +47,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
         }
         int effectiveFinalRows = rows;
 
-        Path path = context.getSource().getServer().getServerDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("item_groups").resolve(group.getRecipeFolderName().replace('/', '-') + ".png");
+        Path path = context.getSource().getServer().getServerDirectory().toPath().resolve(RecipePrinter.getInstance().modid).resolve("item_groups").resolve(group.getDisplayName().getString().replace('/', '-') + ".png");
         if (!Files.exists(path.getParent())) {
             try {
                 Files.createDirectories(path.getParent());
@@ -52,9 +56,17 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             }
         }
 
-        ImageHelper.addRenderJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (poseStack, buffer) -> Util.renderItemCategory(poseStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group), path);
+        CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (poseStack, buffer) -> {
+            Util.renderItemCategory(poseStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group);
+        }));
 
-        context.getSource().sendSuccess(Component.literal("Started rendering ItemGroup " + group.getRecipeFolderName()), true);
+        try {
+            img.get().writeToFile(path);
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
+        context.getSource().sendSuccess(Component.literal("Started rendering ItemGroup " + group.getDisplayName().getString()), true);
 
         return 0;
     }

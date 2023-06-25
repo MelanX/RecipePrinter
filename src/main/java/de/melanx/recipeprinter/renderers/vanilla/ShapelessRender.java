@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.OverlayIcon;
 import de.melanx.recipeprinter.util.RenderHelperMod;
+import de.melanx.recipeprinter.util.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,7 +47,7 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
         poseStack.scale(1f / 3, 1f / 3, 1);
         RenderHelperMod.render(OverlayIcon.SHAPELESS, poseStack, buffer, 0, 0);
         poseStack.popPose();
-        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 99, 23);
+        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         int max = ingredients.size() > 4 ? 3 : 2;
         for (int x = 0; x < max; x++) {

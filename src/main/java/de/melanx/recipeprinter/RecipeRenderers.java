@@ -1,6 +1,7 @@
 package de.melanx.recipeprinter;
 
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,10 @@ import java.util.Map;
 public class RecipeRenderers {
 
     private static final Map<Class<?>, IRecipeRender<?>> renders = new HashMap<>();
+
+    public static boolean isSupported(RecipeType<?> recipeType) {
+        return renders.values().stream().anyMatch(render -> render.getRecipeType() == recipeType);
+    }
 
     public static void registerRecipeRender(IRecipeRender<?> render) {
         renders.put(render.getRecipeClass(), render);

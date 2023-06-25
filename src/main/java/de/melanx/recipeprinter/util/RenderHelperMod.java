@@ -112,7 +112,7 @@ public class RenderHelperMod {
         modelViewStack.pushPose();
         modelViewStack.mulPoseMatrix(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(poseStack, stack, x, y);
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
 
@@ -122,7 +122,7 @@ public class RenderHelperMod {
         modelViewStack.pushPose();
         modelViewStack.mulPoseMatrix(poseStack.last().pose());
         RenderSystem.applyModelViewMatrix();
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, null);
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(poseStack, Minecraft.getInstance().font, stack, x, y, null);
         modelViewStack.popPose();
         RenderSystem.applyModelViewMatrix();
 

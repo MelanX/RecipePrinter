@@ -2,10 +2,13 @@ package de.melanx.recipeprinter.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.phys.Vec2;
 import org.moddingx.libx.render.RenderHelper;
 
@@ -13,8 +16,17 @@ import java.awt.Color;
 
 public class Util {
 
+    public static ItemStack getResultItem(Recipe<?> recipe) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            throw new NullPointerException("level must not be null.");
+        }
+
+        return recipe.getResultItem(level.registryAccess());
+    }
+
     public static boolean isNormalItemCategory(CreativeModeTab category) {
-        return !category.isAlignedRight() && category != CreativeModeTab.TAB_HOTBAR && category != CreativeModeTab.TAB_INVENTORY && category != CreativeModeTab.TAB_SEARCH;
+        return !category.isAlignedRight() && category != CreativeModeTabs.HOTBAR && category != CreativeModeTabs.INVENTORY && category != CreativeModeTabs.SEARCH;
     }
 
     public static void renderItemCategory(PoseStack poseStack, MultiBufferSource buffer, NonNullList<ItemStack> stacks, int rows, int itemsPerRow, CreativeModeTab category) {

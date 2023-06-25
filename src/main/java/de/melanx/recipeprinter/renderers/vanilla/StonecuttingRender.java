@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.OverlayIcon;
 import de.melanx.recipeprinter.util.RenderHelperMod;
+import de.melanx.recipeprinter.util.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +42,7 @@ public class StonecuttingRender implements IRecipeRender<StonecutterRecipe> {
         RenderHelperMod.renderSlot(poseStack, buffer, 5, 5);
         RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 5, 5);
         RenderHelperMod.renderSlot(poseStack, buffer, 49, 5);
-        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 49, 5);
+        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 49, 5);
         RenderHelperMod.render(OverlayIcon.ARROW, poseStack, buffer, 24, 5);
         poseStack.pushPose();
         poseStack.translate(30, 8, 0);

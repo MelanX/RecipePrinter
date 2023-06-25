@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[${fml},)"
 license="The Apache License, Version 2.0"
 issueTrackerURL="http://www.github.com/MelanX/recipeprinter/issues/"
 
 [[mods]]
 modId="recipeprinter"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Recipe Printer"
 updateJSONURL="https://assets.melanx.de/updates/recipe-printer.json"
 displayURL="www.curseforge.com/members/melanx/"
@@ -18,27 +18,27 @@ Print recipes to showcase them
 [[dependencies.recipeprinter]]
     modId="forge"
     mandatory=true
-    versionRange="[41.0.94,)"
+    versionRange="[${forge},)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.recipeprinter]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19, 1.20)"
+    versionRange="[${minecraft},)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.recipeprinter]]
     modId="libx"
     mandatory=true
-    versionRange="[1.19-4,)"
+    versionRange="[1.19.4-4.4.11,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.recipeprinter]]
     modId="jei"
     mandatory=false
-    versionRange="[11,)"
+    versionRange="[13.1.0.15,)"
     ordering="NONE"
     side="BOTH"

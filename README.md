@@ -24,7 +24,7 @@ maven {
 ```
 2. Add the following to your dependencies:
 ```groovy
-runtimeOnly fg.deobf("io.github.noeppi_noeppi.mods:LibX:1.18.2-3.2.0")
+runtimeOnly fg.deobf("org.moddingx:LibX:1.19-4.0.7")
 runtimeOnly fg.deobf("de.melanx.recipeprinter:RecipePrinter:1.18.2-3.2+")
 ```
 3. Start game.

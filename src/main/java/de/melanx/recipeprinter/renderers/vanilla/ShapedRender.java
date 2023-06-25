@@ -3,6 +3,7 @@ package de.melanx.recipeprinter.renderers.vanilla;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.RenderHelperMod;
+import de.melanx.recipeprinter.util.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -37,7 +38,7 @@ public class ShapedRender implements IRecipeRender<ShapedRecipe> {
     @Override
     public void render(ShapedRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
         RenderHelperMod.renderBackground(ShapelessRender.BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62, true);
-        RenderHelperMod.renderItem(poseStack, buffer, recipe.getResultItem(), 99, 23);
+        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         for (int x = 0; x < recipe.getRecipeWidth(); x++) {
             for (int y = 0; y < recipe.getRecipeHeight(); y++) {

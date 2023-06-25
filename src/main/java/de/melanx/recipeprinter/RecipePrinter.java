@@ -55,7 +55,7 @@ public final class RecipePrinter extends ModX {
         RecipeRenderers.registerRecipeRender(new BlastingRender());
         RecipeRenderers.registerRecipeRender(new SmokingRender());
         RecipeRenderers.registerRecipeRender(new CampfireRender());
-        RecipeRenderers.registerRecipeRender(new SmithingRender());
+        RecipeRenderers.registerRecipeRender(new SmithingTransformRender());
         RecipeRenderers.registerRecipeRender(new StonecuttingRender());
     }
 
