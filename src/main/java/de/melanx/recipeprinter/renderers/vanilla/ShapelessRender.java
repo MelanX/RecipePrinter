@@ -5,7 +5,7 @@ import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.OverlayIcon;
 import de.melanx.recipeprinter.util.RenderHelperMod;
 import de.melanx.recipeprinter.util.Util;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -40,24 +40,25 @@ public class ShapelessRender implements IRecipeRender<ShapelessRecipe> {
     }
 
     @Override
-    public void render(ShapelessRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 25, 12, 124, 62, true);
+    public void render(ShapelessRecipe recipe, GuiGraphics guiGraphics) {
+        PoseStack poseStack = guiGraphics.pose();
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, guiGraphics, 25, 12, 124, 62, true);
         poseStack.pushPose();
         poseStack.translate(108, 4, 0);
         poseStack.scale(1f / 3, 1f / 3, 1);
-        RenderHelperMod.render(OverlayIcon.SHAPELESS, poseStack, buffer, 0, 0);
+        RenderHelperMod.render(OverlayIcon.SHAPELESS, guiGraphics, 0, 0);
         poseStack.popPose();
-        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 99, 23);
+        RenderHelperMod.renderItem(guiGraphics, Util.getResultItem(recipe), 99, 23);
         List<Ingredient> ingredients = recipe.getIngredients();
         int max = ingredients.size() > 4 ? 3 : 2;
         for (int x = 0; x < max; x++) {
             for (int y = 0; y < max; y++) {
                 int idx = x + (max * y);
                 if (ingredients.size() == 1) {
-                    RenderHelperMod.renderIngredient(poseStack, buffer, ingredients.get(idx), 23, 23);
+                    RenderHelperMod.renderIngredient(guiGraphics, ingredients.get(idx), 23, 23);
                     return;
                 } else if (idx < ingredients.size()) {
-                    RenderHelperMod.renderIngredient(poseStack, buffer, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
+                    RenderHelperMod.renderIngredient(guiGraphics, ingredients.get(idx), 5 + (x * 18), 5 + (y * 18));
                 }
             }
         }

@@ -1,10 +1,10 @@
 package de.melanx.recipeprinter.renderers.vanilla;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
+import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.RenderHelperMod;
 import de.melanx.recipeprinter.util.Util;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.*;
 
@@ -36,13 +36,13 @@ public class SmithingTransformRender implements IRecipeRender<SmithingRecipe> {
     }
 
     @Override
-    public void render(SmithingRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 3, 4, 116, 65, true);
-        poseStack.translate(0, 0, 10);
-        RenderHelperMod.renderIngredient(poseStack, buffer, getTemplate(recipe), 5, 44);
-        RenderHelperMod.renderIngredient(poseStack, buffer, getBase(recipe), 23, 44);
-        RenderHelperMod.renderIngredient(poseStack, buffer, getAddition(recipe), 41, 44);
-        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 95, 44);
+    public void render(SmithingRecipe recipe, GuiGraphics guiGraphics) {
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, guiGraphics, 3, 4, 116, 65, true);
+        guiGraphics.pose().translate(0, 0, 10);
+        RenderHelperMod.renderIngredient(guiGraphics, getTemplate(recipe), 5, 44);
+        RenderHelperMod.renderIngredient(guiGraphics, getBase(recipe), 23, 44);
+        RenderHelperMod.renderIngredient(guiGraphics, getAddition(recipe), 41, 44);
+        RenderHelperMod.renderItem(guiGraphics, Util.getResultItem(recipe), 95, 44);
     }
 
     private static Ingredient getTemplate(SmithingRecipe recipe) {
@@ -58,12 +58,6 @@ public class SmithingTransformRender implements IRecipeRender<SmithingRecipe> {
     }
 
     private static Ingredient getBase(SmithingRecipe recipe) {
-        //noinspection removal
-        if (recipe instanceof LegacyUpgradeRecipe legacyRecipe) {
-            //noinspection removal
-            return legacyRecipe.base;
-        }
-
         if (recipe instanceof SmithingTransformRecipe transformRecipe) {
             return transformRecipe.base;
         }
@@ -72,16 +66,11 @@ public class SmithingTransformRender implements IRecipeRender<SmithingRecipe> {
             return trimRecipe.base;
         }
 
+        RecipePrinter.getInstance().logger.warn("Unknown smithing recipe: " + recipe.getClass().getCanonicalName());
         return Ingredient.EMPTY;
     }
 
     private static Ingredient getAddition(SmithingRecipe recipe) {
-        //noinspection removal
-        if (recipe instanceof LegacyUpgradeRecipe legacyRecipe) {
-            //noinspection removal
-            return legacyRecipe.addition;
-        }
-
         if (recipe instanceof SmithingTransformRecipe transformRecipe) {
             return transformRecipe.addition;
         }
@@ -90,6 +79,7 @@ public class SmithingTransformRender implements IRecipeRender<SmithingRecipe> {
             return trimRecipe.addition;
         }
 
+        RecipePrinter.getInstance().logger.warn("Unknown smithing recipe: " + recipe.getClass().getCanonicalName());
         return Ingredient.EMPTY;
     }
 }

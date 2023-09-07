@@ -56,9 +56,9 @@ public class RecipeCommand implements Command<CommandSourceStack> {
                         }
                     }
 
-                    CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(render.getRecipeWidth(), render.getRecipeHeight(), (int) render.getScaleFactor(), (poseStack, buffer) -> {
+                    CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(render.getRecipeWidth(), render.getRecipeHeight(), (int) render.getScaleFactor(), guiGraphics -> {
                         //noinspection unchecked
-                        ((IRecipeRender<Recipe<?>>) render).render(recipe, poseStack, buffer);
+                        ((IRecipeRender<Recipe<?>>) render).render(recipe, guiGraphics);
                     }));
 
                     try {
@@ -71,11 +71,11 @@ public class RecipeCommand implements Command<CommandSourceStack> {
         }
 
         if (typesNotSupported.isEmpty()) {
-            context.getSource().sendSuccess(Component.literal("Started rendering " + recipesTotal.get() + " recipes."), true);
+            context.getSource().sendSuccess(() -> Component.literal("Started rendering " + recipesTotal.get() + " recipes."), true);
         } else {
-            context.getSource().sendSuccess(Component.literal("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
+            context.getSource().sendSuccess(() -> Component.literal("Started rendering " + recipesStarted.get() + " out of " + recipesTotal.get() + " recipes."), true);
             for (RecipeType<?> rt : typesNotSupported) {
-                context.getSource().sendSuccess(Component.literal("Could not render recipes: " + rt.toString()), true);
+                context.getSource().sendSuccess(() -> Component.literal("Could not render recipes: " + rt.toString()), true);
             }
         }
 

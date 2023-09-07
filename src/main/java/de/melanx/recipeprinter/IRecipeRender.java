@@ -1,7 +1,6 @@
 package de.melanx.recipeprinter;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -18,7 +17,7 @@ public interface IRecipeRender<T extends Recipe<?>> {
 
     int getRecipeHeight();
 
-    void render(T recipe, PoseStack poseStack, MultiBufferSource buffer);
+    void render(T recipe, GuiGraphics guiGraphics);
 
     default double getScaleFactor() {
         return ModConfig.scale;
