@@ -56,8 +56,8 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             }
         }
 
-        CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, (poseStack, buffer) -> {
-            Util.renderItemCategory(poseStack, buffer, stacks, effectiveFinalRows, itemsPerRow, group);
+        CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(itemsPerRow * 18 + 8, rows * 18 + 24, ModConfig.scale, guiGraphics -> {
+            Util.renderItemCategory(guiGraphics, stacks, effectiveFinalRows, itemsPerRow, group);
         }));
 
         try {
@@ -66,7 +66,7 @@ public class ItemCategoryCommand implements Command<CommandSourceStack> {
             throw new RuntimeException(e);
         }
 
-        context.getSource().sendSuccess(Component.literal("Started rendering ItemGroup " + group.getDisplayName().getString()), true);
+        context.getSource().sendSuccess(() -> Component.literal("Started rendering ItemGroup " + group.getDisplayName().getString()), true);
 
         return 0;
     }

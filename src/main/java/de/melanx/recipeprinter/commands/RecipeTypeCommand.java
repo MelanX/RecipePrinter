@@ -47,9 +47,9 @@ public class RecipeTypeCommand implements Command<CommandSourceStack> {
                 }
             }
 
-            CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(render.getRecipeWidth(), render.getRecipeHeight(), (int) render.getScaleFactor(), (poseStack, buffer) -> {
+            CompletableFuture<NativeImage> img = ImageHelper.render(new PrinterJob(render.getRecipeWidth(), render.getRecipeHeight(), (int) render.getScaleFactor(), guiGraphics -> {
                 //noinspection unchecked
-                ((IRecipeRender<Recipe<?>>) render).render(recipe, poseStack, buffer);
+                ((IRecipeRender<Recipe<?>>) render).render(recipe, guiGraphics);
             }));
 
             try {
@@ -59,7 +59,7 @@ public class RecipeTypeCommand implements Command<CommandSourceStack> {
             }
         }
 
-        context.getSource().sendSuccess(Component.literal("Started rendering " + list.size() + " recipes."), true);
+        context.getSource().sendSuccess(() -> Component.literal("Started rendering " + list.size() + " recipes."), true);
 
         return 0;
     }

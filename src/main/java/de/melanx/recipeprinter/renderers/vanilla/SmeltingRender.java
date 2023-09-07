@@ -6,7 +6,7 @@ import de.melanx.recipeprinter.RecipePrinter;
 import de.melanx.recipeprinter.util.RenderHelperMod;
 import de.melanx.recipeprinter.util.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -47,21 +47,22 @@ public class SmeltingRender implements IRecipeRender<SmeltingRecipe> {
     }
 
     @Override
-    public void render(SmeltingRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        SmeltingRender.render((AbstractCookingRecipe) recipe, poseStack, buffer);
-        RenderHelperMod.renderItem(poseStack, buffer, new ItemStack(Items.FURNACE), 5, 41);
+    public void render(SmeltingRecipe recipe, GuiGraphics guiGraphics) {
+        SmeltingRender.commonRender(recipe, guiGraphics);
+        RenderHelperMod.renderItem(guiGraphics, new ItemStack(Items.FURNACE), 5, 41);
     }
 
-    public static void render(AbstractCookingRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 51, 12, 90, 62, true);
+    public static void commonRender(AbstractCookingRecipe recipe, GuiGraphics guiGraphics) {
+        PoseStack poseStack = guiGraphics.pose();
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, guiGraphics, 51, 12, 90, 62, true);
         poseStack.pushPose();
         poseStack.translate(6, 25, 10);
-        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, poseStack, buffer, 176, 0, 14, 14, false);
+        RenderHelperMod.renderBackground(BACKGROUND_TEXTURE, guiGraphics, 176, 0, 14, 14, false);
         poseStack.popPose();
-        RenderHelperMod.renderItem(poseStack, buffer, Util.getResultItem(recipe), 65, 23);
-        RenderHelperMod.renderIngredient(poseStack, buffer, recipe.getIngredients().get(0), 5, 5);
+        RenderHelperMod.renderItem(guiGraphics, Util.getResultItem(recipe), 65, 23);
+        RenderHelperMod.renderIngredient(guiGraphics, recipe.getIngredients().get(0), 5, 5);
         MutableComponent time = Component.translatable(RecipePrinter.getInstance().modid + ".time", BigDecimal.valueOf(recipe.getCookingTime() / 20d).setScale(2, RoundingMode.HALF_UP).toPlainString());
-        Minecraft.getInstance().font.draw(poseStack, time.getString(), 26, 48, RenderHelperMod.TEXT_COLOR);
+        guiGraphics.drawString(Minecraft.getInstance().font, time.getString(), 26, 48, RenderHelperMod.TEXT_COLOR, false);
         RenderHelper.resetColor();
     }
 }

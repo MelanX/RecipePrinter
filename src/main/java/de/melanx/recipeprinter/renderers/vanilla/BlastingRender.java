@@ -1,9 +1,8 @@
 package de.melanx.recipeprinter.renderers.vanilla;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.melanx.recipeprinter.IRecipeRender;
 import de.melanx.recipeprinter.util.RenderHelperMod;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
@@ -35,8 +34,8 @@ public class BlastingRender implements IRecipeRender<BlastingRecipe> {
     }
 
     @Override
-    public void render(BlastingRecipe recipe, PoseStack poseStack, MultiBufferSource buffer) {
-        SmeltingRender.render(recipe, poseStack, buffer);
-        RenderHelperMod.renderItem(poseStack, buffer, new ItemStack(Items.BLAST_FURNACE), 5, 41);
+    public void render(BlastingRecipe recipe, GuiGraphics guiGraphics) {
+        SmeltingRender.commonRender(recipe, guiGraphics);
+        RenderHelperMod.renderItem(guiGraphics, new ItemStack(Items.BLAST_FURNACE), 5, 41);
     }
 }
